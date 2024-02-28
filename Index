@@ -1,0 +1,18 @@
+# External Enumeration
+### Passive
+- [[Google Hacking]]
+- Netcraft
+- [[Github]]
+- Shodan
+- Security Headers
+- SSL Server Test
+### Active
+- [[DNS]]
+- [[DNSRecon]]
+- [[DNSEnum]]
+- [[nslookup]]
+- [[Netcat]]
+- [[iptables]]
+- [[nmap]]
+- [[Powershell]]
+- [[SMB]]
