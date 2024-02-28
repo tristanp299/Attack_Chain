@@ -1,0 +1,13 @@
+# Enumeration
+- hostname
+  - -h
+  - -t (txt/mx) -> get text records
+- DNSRecon
+  - `dnsrecon -d megacorpone.com -t std`
+    - std/brt = brute force/standard
+  - -D = list
+- DNSEnum
+		- dnsenum megacorpone.com
+- nslookup
+  - `nslookup mail.megacorptwo.com`
+  - `nslookup -type=TXT info.megacorptwo.com $ip`
