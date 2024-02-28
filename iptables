@@ -1,0 +1,15 @@
+# Enumeration
+1. sudo iptables -I INPUT 1 -s $ip -j ACCEPT
+2. sudo iptables -I OUTPUT 1 -d $ip -j ACCEPT
+3. sudo iptables -Z
+  - -I --> new rules
+  - -s --> source IP
+  - -d --> destination IP
+  - -j --> accept traffice
+  - -Z --> zero the packet and byte counters
+4. nmap $ip
+5. sudo iptables -vn -L
+  - -v --> verbosity
+  - -n --> numeric count
+  - -L --> list the rules present
+6. sudo iptables -Z
