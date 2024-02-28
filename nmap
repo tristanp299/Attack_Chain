@@ -1,0 +1,4 @@
+# Enumeration
+- nmap -p 80 $ip-253
+	- --oscan-guess
+	- --script-help
