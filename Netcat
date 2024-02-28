@@ -1,0 +1,5 @@
+# Enumeration
+- `nc -nvv -w 1 -z $ip 3388-3390`
+		- -w = timeout
+		- -z =  zero-I/O = scan, dont send data
+		- -u = udp
