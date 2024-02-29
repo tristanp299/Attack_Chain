@@ -1,0 +1,16 @@
+# Enumeration
+- VRFY
+		- verify email
+		- Example:
+			- VRFY root
+			- VRFY idontexist
+		- [[SMPT_VRFY_script]]
+	- EXPN
+		- membership of a mailing list
+	- [Windows]
+		- Test-NetConnection -Port 25 [$ip] 
+		- Optional
+			- install telnet
+				- dism /online /Enable-Feature/FeatureName:TelnetClient
+			- OR transfer it from another client
+			- telnet [$ip]
