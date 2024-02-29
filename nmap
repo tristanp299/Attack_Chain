@@ -2,3 +2,7 @@
 - nmap -p 80 $ip-253
 	- --oscan-guess
 	- --script-help
+### Scripts
+- http-title
+	- Useful info
+- http-enum
