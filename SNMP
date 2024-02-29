@@ -1,0 +1,32 @@
+# Enumeration
+
+- Example: [Must be UDP scan]
+		- sudo nmap -sU --open -p 161
+	- onesixtyone
+		- tool used for brute forcing SNMP port
+		- build community strings
+			- echo public > community
+			- echo private >> community
+			- echo manager >> comunity
+		- build ip list
+			- for ip in $(seq 1 254); do echo 192.169.50.\$ip;done > ips
+		- onesixtyone -c community -i ips
+	- snmpwalk
+		- look up MIB for values
+		- used for probing and querying SNMP values
+			- Must know the SNMP read-only community string
+				- usually "public"
+		- snmpwalk -c public -v1 -t 10
+			- -c --> community string
+			- -v --> SNMP version
+			- -t --> timeout
+		- snmpwalk -c public -v1 192.168.50.151 1.3.6.1.4.1.77.1.2.25
+			- for windows dc01 user accounts
+		- snmpwalk -c public -v1 192.168.50.151 1.3.6.1.2.1.25.4.2.1.2
+			- for running processes
+		- snmpwalk -c public -v1 192.168.50.151 1.3.6.1.2.1.25.6.3.1.2
+			- all installed software
+		- snmpwalk -c public -v1 192.168.50.151 1.3.6.1.2.1.6.13.1.3
+			- all TCP listening ports
+		- snmpwalk -Oa
+			- automatically converts hex into ASCII
