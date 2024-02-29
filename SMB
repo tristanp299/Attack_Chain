@@ -1,0 +1,18 @@
+# Enumeration
+- `net view \\\\dc01 /all`
+		- smbclinet -L //server -U user
+			- -L = lists of share names
+			- -U for users
+		- smbclient -L //server -U user%password
+			- username & password
+		- smbclient //server/share -U user%password
+			- connecting to share
+		- cd tgt_dir
+		- lcd /myLocalDir
+		- smbclient //server/share --directory path/to/directory -c 'get file.txt'
+		- put [filename] ??
+		- leading SMB to the Win2K or NT server
+			- smbclient //server/plans -I [$ip] -W [domain_name]  -U username%password
+		- --no-pass
+### Scripts
+- `/usr/share/nmap/scripts/smb*`
