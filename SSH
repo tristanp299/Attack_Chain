@@ -1,1 +1,8 @@
+# Password Attacks
 - [[Network Services Logins]]
+- [[John The Ripper]]
+- [[SSH Private Key Passphrase]]
+# Misc
+
+- scp user@ip:/dir/file /home/kali
+- scp /home/kali/file user@ip:/tmp/file
