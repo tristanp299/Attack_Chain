@@ -28,9 +28,37 @@
 - [[Gobuster]]
 - [[curl]]
 - [[Javascript]]
+#### Client-Side Enumeration
+- [[exiftool]
+- [[Client Fingerprinting]]
 # Attacks
-### Web
+### Web Attacks
+`Need to account for .htaccess files AND Web Application Firewalls (WAF)`
 - [[Directory Traversal Attack]]
 - [[PHP Wrappers]]
 - [[File Upload Vulnerability]]
 - [[OS Command Injection]]
+- [[SQL Injection Attacks]]
+- Burp
+### Client-Side Attacks
+- [[Microsoft Office]]
+- [[Windows Library Files]]
+- [[Shellter]]
+### Exploits
+- [[Exploit Resources]]
+### Memory Attacks
+- [[Buffer Overflow]]
+### Network Attacks # TODO --> passwords attacks.md
+- [[Hydra]] #TODO 
+### Password Attacks #TODO
+- [[Password Attacks]] #TODO
+# Resources
+- [[Cross-Compiling]]
+# Antivirus Evasion
+- [[Antivirus Evasion Knowledge]]
+- [[xxd]]
+- [[Thread Injection]]
+- [[Shellter]]
+# Miscellaneous
+- [[FTP]]
+- [[Handy Commands]]
