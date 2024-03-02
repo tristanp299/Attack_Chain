@@ -1,0 +1,4 @@
+- metadata of 'supported' files
+- exiftool -a -u brochure.pdf
+  - -a to show duplicate tags
+  - -u to display unkown tags
