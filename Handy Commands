@@ -1,3 +1,11 @@
 - ss
   - `ss -ntplu`
   - view open ports (*nix)
+
+gzip:
+  - Uncompress zip
+  - `gzip -d`
+
+scp:
+	- `scp user@ip:/dir/file /home/kali`
+	- `scp /home/kali/file user@ip:/tmp/file`
