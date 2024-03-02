@@ -9,6 +9,7 @@
 - THC [[Hydra]]
 	- Network Password Cracking
 - [[Mimikatz]]
+- [[Impacket]] - [[NTLM]] & [[SMB]]
 - [[PsExec]]
 - ScatteredSecrets
 	- track password leaks and compromises and sells plaintext passwords
