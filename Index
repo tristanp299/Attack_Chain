@@ -31,6 +31,10 @@
 #### Client-Side Enumeration
 - [[exiftool]
 - [[Client Fingerprinting]]
+#### Windows Enumeration
+- [[Username and Hostname]]
+- [[Group Memberships]]
+- [[Existing Users and Groups]]
 # Attacks
 ### Web Attacks
 `Need to account for .htaccess files AND Web Application Firewalls (WAF)`
@@ -48,10 +52,16 @@
 - [[Exploit Resources]]
 ### Memory Attacks
 - [[Buffer Overflow]]
-### Network Attacks # TODO --> passwords attacks.md
-- [[Hydra]] #TODO 
-### Password Attacks #TODO
-- [[Password Attacks]] #TODO
+### Network Attacks
+### Password Attacks
+- [[Cracking Tools]]
+- [[SSH]]
+- [[RDP]]
+- [[HTTP POST Login Form]]
+- [[Password Manager]]
+- [[SSH Private Key Passphrase]]
+- [[NTLM]]
+- [[Net-NTLMv2]]
 # Resources
 - [[Cross-Compiling]]
 # Antivirus Evasion
@@ -59,6 +69,13 @@
 - [[xxd]]
 - [[Thread Injection]]
 - [[Shellter]]
+# Windows Privilege Escellation
+- [[
 # Miscellaneous
+- [[Responder]]
 - [[FTP]]
+- [[SSH]]
+- [[RDP]]
 - [[Handy Commands]]
+- [[Mimikatz]]
+- [[Impacket]]
