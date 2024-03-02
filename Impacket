@@ -1,3 +1,5 @@
 # Attacks
 - [[MySQL]]
 - [[SMB]]
+- [[Net-NTLMv2]]
+  - ntlmrelayx
