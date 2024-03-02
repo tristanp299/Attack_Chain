@@ -1,0 +1,22 @@
+### Cracking NTLM
+		- some credentials stored when a service is run with a user account
+- Stored in SAM (Security Account Manager)
+	- Location: C:\Windows\system32\config\sam
+- [[Mimikatz]]
+- [[PsExec]] tool
+	- privilege escalation 
+
+### Passing NTLM
+- NTLM passwords not salted & are static between sessions
+- On used as local admin account
+	- other accounts in local admin group need to change UAC
+
+- Tools that support authentication with NTLM hashes
+	- [[SMB]] enumeratison
+		- [[smbclient]]
+		- [[CrackMapExec]]
+	- Command execution
+		- [[Impacket]]
+			- psexec.py
+			- wmiexec.py
+- Can use NTLM hashes to connect with SMB, RDP, and WinRM, and Mimikatzs
