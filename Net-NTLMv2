@@ -1,0 +1,8 @@
+- Since we don't have privileges to run Mimikatz, we cannot extract passwords from the system. But we can set up an SMB server with Responder on our Kali machine, then connect to it with the user _paul_ and crack the Net-NTLMv2 hash
+- Net-NTLMv2
+	- netowrk protocol
+	- can be abused if unprivileged user
+		- cant run Mimikatz
+	- PtH attacks
+
+- [[Impacket]]
