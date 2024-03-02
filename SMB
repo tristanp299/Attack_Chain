@@ -27,31 +27,9 @@
 	- >get secrets.txt
 - CrackMapExec
 # Attacks
-- 
-#### [[Impacket]]
-- psexec.py
-- wmiexec.py
-- Using psexec.py
-	- searches for a writable share and uploads an executable file to it. Then registers exe as Windows service & starts
-- Using impacket-scripts to execute psexec.py
-		- user friendly
-		- upload .exe
-		- leaves logs
-	- impacket-psexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955abed1762964b Administrator@192.168.50.212
-		- -hashes = hash
-			- format = "LMHash:NTHash"
-			- since we only use NTLM hash
-				- fill LMHash section with (32) 0's
-			- then username@ip
-			- then command to execute
-				- default or blank = cmd.exe
-		- shell is always a SYSTEM user
-- impacket-wmiexec
-	- doesnt write to disk
-	- can be used with pth-wmis for remote acces
-	- ```
-		impacket-wmiexec -hashes 00000000000000000000000000000000: 2a944a58d4ffa77137b2c587e6ed7626 maria@192.168.210.70
-		``
+### NTLM & Net-NTLMv2 Hash/SMB/Relay attacks
+- [[Impacket]]
+
 ### Examples
 - [[Password Manager]]
 - [[SSH Private Key Passphrase]]
