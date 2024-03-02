@@ -1,0 +1,21 @@
+- FTP
+	- set FTP session to active
+		- -A
+	- set FTP session to anonymous
+		- -a
+	- local pwd
+		- lpwd
+	- change directory on the local machine
+		- lcd
+	- change directory on the target machine
+		- cd
+	- copy file from remote to local machine
+		- get
+		- mget
+	- copy file from local to remote machine
+		- put
+		- mput
+	- enable binary
+		- -binary?
+		- ;type=I
+			- I = binary??
