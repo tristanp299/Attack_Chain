@@ -1,3 +1,7 @@
 # Enumeration
 - `gobuster dir -u 192.168.50.20 -w /usr/share/wordlists/dirb/common.txt -t 5`
   -x for file type
+- Gobuster pattern brute force (APIs)
+  - {GOBUSTER}/v1 > pattern
+  - {GOBUSTER}/v2 >> pattern
+  - `gobuster dir -u http://192.168.50.16:5002 -w /usr/share/wordlists/dirb/big.txt -p pattern`
