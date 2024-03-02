@@ -21,3 +21,10 @@
 - [[SNMP]]
 - Nessus
 - [[Autorecon]]
+#### Web Enumeration
+- Wappalyzer
+- Burp
+- Firefox Debugger
+- [[Gobuster]]
+- [[curl]]
+- [[Javascript]]
