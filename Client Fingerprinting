@@ -1,0 +1,10 @@
+- theHarvester
+	- extracts emails / very important
+	- used for HTML Application (HTA) attacks
+- Canarytokens
+	- generates links with embedded tokens or urls
+	- grabs browser, IP, and OS info
+- Grabify
+	- IP logger
+- finerprint.js
+	- fingerprinting libraries
