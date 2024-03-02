@@ -19,3 +19,6 @@
 		- -binary?
 		- ;type=I
 			- I = binary??
+ Example:
+	- ftp $ip
+	- ftp username@$ip
