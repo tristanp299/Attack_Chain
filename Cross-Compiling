@@ -12,6 +12,8 @@
 	- to execute
 		- wine [file]
 		- wine ./exe
+### Attacks
+- [[Buffer Overflow]]
 
 ## Setting up Wine (make sure to save before trying this)
 ### Im not sure this works...50/50
@@ -32,4 +34,6 @@ sudo apt install --install-recommends winehq-staging -y
 sudo sudo apt install winetricks -y
 sudo winecfg
 ```
+### Attacks
+- [[Buffer Overflow]]
 #wine #mingw-w64 #windows #compile
