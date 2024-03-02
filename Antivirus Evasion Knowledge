@@ -41,7 +41,7 @@ kali@kali:~$ xxd -b malware.txt
 00000000: 01101111 01100110 01100110 01110011 01100101 01100011  offsec
 00000006: 00001010    
 ``
-- xxd
+- [[xxd]]
 	- left = binary offset, middle = binary representation, right = ASCII
 	- sha256sum malware.txt
 - Heuristic-based Detection
