@@ -46,6 +46,9 @@
 	- used by EXECUTE instead of SELECT
 - Go to [[MySQL]] or [[Impacket]]
 
+### Automating the Attack
+- [[sqlmap]]
+
 
 
 
