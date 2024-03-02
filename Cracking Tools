@@ -1,15 +1,15 @@
 - [[John The Ripper]]
+	- CPU-based
+		- bcrypt algorithm better
 - [[Hashcat]]
 	- GPU-based
 		- thousands of cores
 	- faster
 	- requires OpenCL or CUDA for GPU cracking process
-	- hashcat -b
-		- benchmark mode
-	- hashcat --show [hash]
-		- display already cracked hash
 - THC [[Hydra]]
 	- Network Password Cracking
+- [[Mimikatz]]
+- [[PsExec]]
 - ScatteredSecrets
 	- track password leaks and compromises and sells plaintext passwords
 - WeLeakInfo
@@ -24,3 +24,14 @@
 	- hash things
 	- echo -n
 		- strip newline so it doesnt effect hash
+
+#### Cracking Methodology
+1. Extract hashes
+2. Format hashes
+		- double check algo with multiple tools
+	- hash-identifier
+	- or hashid
+4. Calculate the cracking time
+	- keyspace / hash rate = time (s)
+5. Prepare wordlist
+6. Attack the hash
