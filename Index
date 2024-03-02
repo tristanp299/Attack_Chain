@@ -28,3 +28,9 @@
 - [[Gobuster]]
 - [[curl]]
 - [[Javascript]]
+# Attacks
+### Web
+- [[Directory Traversal Attack]]
+- [[PHP Wrappers]]
+- [[File Upload Vulnerability]]
+- [[OS Command Injection]]
