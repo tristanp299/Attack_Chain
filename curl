@@ -24,3 +24,5 @@
   - `curl -d '{"password":"pwned","username":"admin"}' -H 'Content-Type: application/json'  http://192.168.50.16:5002/users/v1/login`
 - Send curl responses to burp
 	- `--proxy 127.0.0.1:8080`
+# Attacks
+- [[OS Command Injection]]
