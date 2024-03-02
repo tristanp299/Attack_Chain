@@ -1,0 +1,36 @@
+- hashcat -b
+		- benchmark mode
+	- hashcat --show [hash]
+		- display already cracked hash
+
+- Hashcat rules
+	- $
+		- append
+	- ^
+		- prepend
+	- c
+		- Capitalize 1st word, lowercase the rest
+	- u
+		- makes all letters uppercase
+	- d
+		- duplicates the passwords
+	- example:
+		- hashcat -r demo.rule --stdout demo.txt
+			- -r = rule list
+			- --stdout = dont crack hash, just print
+		- demo.rule
+			- $1 c $!
+				- append 1, capitalize first, lowercase rest, append !
+- Hashcat example:
+	- hashcat -m 0 crackme.txt /usr/share/wordlists/rockyou.txt -r demo3.rule --force
+		- -m = hash type
+			- 0 = MD5
+		- -r = rules
+		- --force = ignore warnings
+- Password guessing hints (most users)
+	- use a main word
+	- usually capitalize first letter
+	- add special character at the end
+		- usually on the left side
+- Hashcat's premade rules
+	- /usr/share/hashcat/rules/
