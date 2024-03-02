@@ -1,0 +1,15 @@
+- mingw-w64
+	- compiles code into a Windows Portable Executable (PE) file
+		1. sudo apt install mingw-w64
+	- Compile to see if there is errors
+		1. i686-w64-mingw32-gcc 42341.c -o syncbreeze_exploit.exe
+			- first arg = C source file
+			- 2nd arg after -o = output PE file
+	- Did not compile, after googling found the WSAStartup error then added
+		- -lws2_32
+			- because linker couldn't find winsock library
+			- -l is the link flag
+	- to execute
+		- wine [file]
+		- wine ./exe
+#wine #mingw-w64 #windows #compile
