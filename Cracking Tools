@@ -1,0 +1,26 @@
+- [[John The Ripper]]
+- [[Hashcat]]
+	- GPU-based
+		- thousands of cores
+	- faster
+	- requires OpenCL or CUDA for GPU cracking process
+	- hashcat -b
+		- benchmark mode
+	- hashcat --show [hash]
+		- display already cracked hash
+- THC [[Hydra]]
+	- Network Password Cracking
+- ScatteredSecrets
+	- track password leaks and compromises and sells plaintext passwords
+- WeLeakInfo
+	- siezed by the FBI & DOJ
+- sed
+	- sed -i '/^1/d' demo.txt
+		- deletes all lines starting with 1
+- <�A HREF="https://www.exploit-db.com/google-hacking-database">Google Hacking DB<�/A>Hashcat Wiki
+	- list of all rule functions
+
+- sha256sum
+	- hash things
+	- echo -n
+		- strip newline so it doesnt effect hash
