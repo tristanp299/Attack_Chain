@@ -1,23 +1,13 @@
-XSS vulnerabilities can be grouped into two major classes: stored1 or reflected.2
-
+XSS vulnerabilities can be grouped into two major classes: stored1 or reflected.
 Stored XSS attacks, also known as Persistent XSS, occur when the exploit payload is stored in a database or otherwise cached by a server. The web application then retrieves this payload and displays it to anyone who visits a vulnerable page. A single Stored XSS vulnerability can therefore attack all site users. Stored XSS vulnerabilities often exist in forum software, especially in comment sections, in product reviews, or wherever user content can be stored and reviewed later.
-
 Reflected XSS attacks usually include the payload in a crafted request or link. The web application takes this value and places it into the page content. This XSS variant only attacks the person submitting the request or visiting the link. Reflected XSS vulnerabilities can often occur in search fields and results, as well as anywhere user input is included in error messages.
-
 Either of these two vulnerability variants can manifest as client- (browser) or server-side; they can also be DOM-based.
-
 DOM-based XSS3 takes place solely within the page's Document Object Model (DOM).4 While we won't cover too much detail for now, we should know that browsers parse a page's HTML content and then generate an internal DOM representation. This type of XSS occurs when a page's DOM is modified with user-controlled values. DOM-based XSS can be stored or reflected; the key is that DOM-based XSS attacks occur when a browser parses the page's content and inserted JavaScript is executed.
-
 No matter how the XSS payload is delivered and executed, the injected scripts run under the context of the user visiting the affected page. This means that the user's browser, not the web application, executes the XSS payload. These attacks can be nevertheless significant, with impacts including session hijacking, forced redirection to malicious pages, execution of local applications as that user, or even trojanized web applications. In the following sections, we will explore some of these attacks.
 
 ### PrivEsc / Session Stealing / Cookies
-
 Since we are now capable of storing JavaScript code inside the target WordPress application and having it executed by the admin user when loading the page, we're ready to get more creative and explore different avenues for obtaining administrative privileges.
-
 We could leverage our XSS to steal cookies1 and session information if the application uses an insecure session management configuration. If we can steal an authenticated user's cookie, we could masquerade as that user within the target web site.
-
 Websites use cookies to track state2 and information about users. Cookies can be set with several optional flags, including two that are particularly interesting to us as penetration testers: Secure and HttpOnly.
-
 The Secure3 flag instructs the browser to only send the cookie over encrypted connections, such as HTTPS. This protects the cookie from being sent in clear text and captured over the network.
-
 The HttpOnly4 flag instructs the browser to deny JavaScript access to the cookie. If this flag is not set, we can use an XSS payload to steal the cookie.
