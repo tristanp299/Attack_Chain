@@ -9,3 +9,15 @@ Either of these two vulnerability variants can manifest as client- (browser) or 
 DOM-based XSS3 takes place solely within the page's Document Object Model (DOM).4 While we won't cover too much detail for now, we should know that browsers parse a page's HTML content and then generate an internal DOM representation. This type of XSS occurs when a page's DOM is modified with user-controlled values. DOM-based XSS can be stored or reflected; the key is that DOM-based XSS attacks occur when a browser parses the page's content and inserted JavaScript is executed.
 
 No matter how the XSS payload is delivered and executed, the injected scripts run under the context of the user visiting the affected page. This means that the user's browser, not the web application, executes the XSS payload. These attacks can be nevertheless significant, with impacts including session hijacking, forced redirection to malicious pages, execution of local applications as that user, or even trojanized web applications. In the following sections, we will explore some of these attacks.
+
+### PrivEsc / Session Stealing / Cookies
+
+Since we are now capable of storing JavaScript code inside the target WordPress application and having it executed by the admin user when loading the page, we're ready to get more creative and explore different avenues for obtaining administrative privileges.
+
+We could leverage our XSS to steal cookies1 and session information if the application uses an insecure session management configuration. If we can steal an authenticated user's cookie, we could masquerade as that user within the target web site.
+
+Websites use cookies to track state2 and information about users. Cookies can be set with several optional flags, including two that are particularly interesting to us as penetration testers: Secure and HttpOnly.
+
+The Secure3 flag instructs the browser to only send the cookie over encrypted connections, such as HTTPS. This protects the cookie from being sent in clear text and captured over the network.
+
+The HttpOnly4 flag instructs the browser to deny JavaScript access to the cookie. If this flag is not set, we can use an XSS payload to steal the cookie.
