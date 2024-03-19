@@ -9,3 +9,15 @@ gzip:
 scp:
 	- `scp user@ip:/dir/file /home/kali`
 	- `scp /home/kali/file user@ip:/tmp/file`
+
+impacket-rpcdump -port 135 192.168.161.189
+impacket-getArch -target 192.168.161.189
+enum4linux -a -M -l -d 192.168.161.189 2>&1
+smbclient -L //192.168.161.189 -N -I 192.168.161.189 2>&1
+smbmap -H 192.168.161.189 -P 445 2>&1
+smbmap -H 192.168.161.189 -P 445 -x "ipconfig /all" 2>&1
+smbmap -u null -p "" -H 192.168.161.189 -P 139 -x "ipconfig /all" 2>&1
+nbtscan -rvh 192.168.161.189 2>&1
+feroxbuster -u http://192.168.161.189:3128/ -t 80 -w /usr/share/seclists/Discovery/Web-Content/common.txt -x "txt,html,php,asp,aspx,jsp" -v -k -n -q -e -r -o "/home/kali/Documents/Squid/results/192.168.161.189/scans/tcp3128/tcp_3128_http_feroxbuster_common.txt"
+curl -sSikf http://192.168.161.189:3128/.well-known/security.txt
+nikto -ask=no -Tuning=x4567890ac -nointeractive -host http://192.168.161.189:3128 2>&1 | tee "/home/kali/Documents/Squid/results/192.168.161.189/scans/tcp3128/tcp_3128_http_nikto.txt"
