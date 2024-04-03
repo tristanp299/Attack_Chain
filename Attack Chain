@@ -1,0 +1,18 @@
+https://wadcoms.github.io/
+- [[Login]]
+  - SSH/RDP/SMB
+    - hydra -L /usr/share/wordlists/dirb/others/names.txt -P /usr/share/wordlists/rockyou.txt -s 2222 192.168.50.201 ssh/rdp/smb
+  - HTTP
+    - hydra -L /usr/share/wordlists/dirb/others/names.txt -P /usr/share/wordlists/rockyou.txt 192.168.50.20 http-get /webpage/
+- [[Found Hash]]
+  - hashcat -m 0 crackme.txt /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/demo3.rule --force
+  - ssh2john
+  - keepass2john
+    - keepass2john Database.kdbx > keepass.hash
+- [[Proxy Nmap]]
+proxychains nmap -n -Pn -F -sV -sT -oA nmap_results -vvv -iL targets.txt -T4 --max-retries 1 --max-rtt-timeout 2s --ttl 50ms --open
+- AD
+  - Get usernames ( from rpc, http etc..)
+  -  Use kerbrute to identify valid users and check for Kerberos pre authentication for the users (getnpusers.py).
+  - Enumerate the open ports once again with the creds
+  - bloodhound.py
