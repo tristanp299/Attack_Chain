@@ -11,6 +11,8 @@ https://book.hacktricks.xyz/network-services-pentesting/pentesting-web
   - ssh2john
   - keepass2john
     - keepass2john Database.kdbx > keepass.hash
+- [[Transferring Files]]
+- https://steflan-security.com/shell-file-transfer-cheat-sheet/
 - [[Proxy Nmap]]
 proxychains nmap -n -Pn -F -sV -sT -oA nmap_results -vvv -iL targets.txt -T4 --max-retries 1 --max-rtt-timeout 2s --ttl 50ms --open
 - AD
