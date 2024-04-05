@@ -28,6 +28,26 @@ proxychains nmap -n -Pn -F -sV -sT -oA nmap_results -vvv -iL targets.txt -T4 --m
 - PrintSpoofer
 - Found username
   - `python3 GetNPUsers.py test.local/ -dc-ip 10.10.10.1 -usersfile usernames.txt -format hashcat -outputfile hashes.txt`
+- [[Google Dorks]]
+Google Dorks
+```
+TERM site:cvedetails.com inurl:/cve/
+TERM inurl:walkthrough site:hackingarticles.in
+TERM inurl:reports site:hackerone.com
+TERM site:resources.infosecinstitute.com inurl:walkthrough
+TERM site:medium.com inurl:(walkthrough|ctf|vulnhub) -"host a CTF" -"Hosting CTF" -"Organize a CTF"
+TERM site:medium.com inurl:CVE
+TERM site:blog.csdn.net inurl:details intext:(ctf|oscp|virtualhackinglabs)
+TERM site:0xdf.gitlab.io -inurl:tags inurl:html
+TERM inurl:ctf site:bootlesshacker.com
+TERM site:fdlucifer.github.io -inurl:(page and archives and categories) intext:(vulnhub|Hack-The-Box)
+TERM site:book.hacktricks.xyz
+
+Specific searches
+https://github.com/swisskyrepo/PayloadsAllTheThings/search?q=TERM
+https://twitter.com/search?q=TERM&src=typed_query
+https://github.com/search?q=TERM
+```
 #### Reddit Comment
 Autorecon is awesome and this is excellent advice. Something to be aware of is that it's really hard to parse the output coherently without the webserver trick: when it's done running, go to the results folder with all the text files and run sudo python3 -m http.server 80, then go to localhost in your browser and click through them like a website. So much easier than trying to use "cat" or "nano" to browse results.
 
