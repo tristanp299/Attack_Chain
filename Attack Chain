@@ -11,6 +11,8 @@ https://book.hacktricks.xyz/network-services-pentesting/pentesting-web
   - ssh2john
   - keepass2john
     - keepass2john Database.kdbx > keepass.hash
+- [[Directory Traversal Fuzzing]]
+https://github.com/wireghoul/dotdotpwn/blob/master/EXAMPLES.txt
 - [[Transferring Files]]
 - https://steflan-security.com/shell-file-transfer-cheat-sheet/
 - [[Proxy Nmap]]
@@ -21,3 +23,44 @@ proxychains nmap -n -Pn -F -sV -sT -oA nmap_results -vvv -iL targets.txt -T4 --m
   - ` nmap -p 88 --script krb5-enum-users --script-args krb5-enum-users.realm='test' `
   - Enumerate the open ports once again with the creds
   - bloodhound.py
+
+#### Reddit Comment
+Autorecon is awesome and this is excellent advice. Something to be aware of is that it's really hard to parse the output coherently without the webserver trick: when it's done running, go to the results folder with all the text files and run sudo python3 -m http.server 80, then go to localhost in your browser and click through them like a website. So much easier than trying to use "cat" or "nano" to browse results.
+
+The commands you listed are a solid start, especially the nmap scripts (which are so, so useful). You can probably skip "curl" and "nc". Instead, I'd save the "nc -nv" usage for a port you can't identify with nmap and replace "curl" with just browsing the website and pressing "F12" to check out the html in your browser window. Most people also use Gobuster, dirsearch, or rustbuster in place of dirbuster, since dirbuster has fewer options and is slower than the others.
+
+More tips:
+
+Always use 3-4 smb tools (smbclient, smbclient.py, nmap scripts, enum4linux, smbmap, crackmapexec) because at least one always seems to fail.
+
+For OSCP footholds, searchsploit everything you encounter and try any remotely similar versions. Always, ALWAYS check page HTML for comments and unused code, check cookies.
+
+Run wfuzz or ffuf on absolutely every parameter that looks like it could be anything (use the seclists command injection list and both sqli lists).
+
+If you can create an account then always use usernames like ', 1+1, and {{7*7}} to check for common evaluation vulns, and throw a couple sql bypass payloads at it too as both login and pass.
+
+If you find an API, treat it like any other injection test.
+
+Use payloadsallthethings for upload vulnerabilities (they have like 30 different webshells for each common language) and do payloads one by one with burp.
+
+Learn a variety of ways to turn LFI into RCE, like log injection and sending an email to a machine user. Learn how to get GOOD shells on both windows and linux without the kindness gods smiling on you and giving you python, socat, or nc on the machine. Learn how to deal with egress ports (PG Practice has an egress firewall on most of the machines). Hacktricks can help with all of this stuff.
+
+Bruteforce absolutely everything, every single time, using short lists of usernames, ANY known names, and a common password list + cewl output list from the site. There's a tool called brutex that's nice to throw on in the background since it will cover default port stuff like ssh and ftp with generic name and password lists.
+
+When you directory-bust, check inside every known directory (dirsearch is nice for this since it's recursive) and try extensions like .php.txt and .php.bak if you aren't finding anything. Use fuzzhttpbypass for any "forbidden!" pages, and directory-bust inside the folders even if that doesn't work, since you might be able to read inside them.
+
+I posted a list of google dorks to use recently that I highly recommend - those have scored me so many root flags.
+
+You should know PHP tricks like type juggling and passwords that evaluate to 0 when md5-hashed ("Password147186970!").
+
+You'll want an API token for wpscan to properly utilize the tool, and be sure to know the different switches so you aren't missing stuff.
+
+You'll want to know how to inject mysql/mariadb and sql server, and you should understand the commandline usage of mongodb, postgresql, and maybe redis too. If you only understand the absolute bare minimum about sql injection (bypass payloads and single quote) then I recommend attacking one or two machines with sqlmap (a banned exam tool) with verbosity turned on 3 so you can see how a complete dump injection actually looks (and write down payloads too since those are manually allowed, just can't use the tool).
+
+Base64-decode everything like cookies and stuff. Flask_unsign can do flask server cookies. There's a similar tool for rails if you have any secrets.
+
+SSRF is an absolute must-know for footholds, although I'm not entirely sure if it's within the scope of the exam. I think SSTI falls within the same realm of "must-know" that might not be on the exam either. I believe simple deserialization vulnerabilities are within the scope of the exam, so best to learn about how those work as well.
+
+If you find an SMTP port, try EVERY variation on usernames, like jsmith, j.smith, smithj, john.smith, etc.
+
+Hmmm... this scrambled eggs list has no formatting of any sort, but it's good info.Wrote WAY more than I intended to, haha, and I'll prob think of more stuff later, but that should give you a solid handle on most footholds you'll run into. Cleared my exam the other day, so know that this stuff works. Everyone has a different process though, so find what works for you :)
