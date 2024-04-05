@@ -23,7 +23,7 @@ proxychains nmap -n -Pn -F -sV -sT -oA nmap_results -vvv -iL targets.txt -T4 --m
   - ` nmap -p 88 --script krb5-enum-users --script-args krb5-enum-users.realm='test' `
   - Enumerate the open ports once again with the creds
   - bloodhound.py
-
+- PrintSpoofer
 #### Reddit Comment
 Autorecon is awesome and this is excellent advice. Something to be aware of is that it's really hard to parse the output coherently without the webserver trick: when it's done running, go to the results folder with all the text files and run sudo python3 -m http.server 80, then go to localhost in your browser and click through them like a website. So much easier than trying to use "cat" or "nano" to browse results.
 
