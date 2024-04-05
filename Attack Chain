@@ -1,6 +1,8 @@
 https://wadcoms.github.io/
 https://github.com/swisskyrepo/PayloadsAllTheThings
 https://book.hacktricks.xyz/network-services-pentesting/pentesting-web
+-[[Brute Force]]
+  - https://github.com/1N3/BruteX/blob/master/brutex
 - [[Login]]
   - SSH/RDP/SMB
     - hydra -L /usr/share/wordlists/dirb/others/names.txt -P /usr/share/wordlists/rockyou.txt -s 2222 192.168.50.201 ssh/rdp/smb
