@@ -1,8 +1,10 @@
 ##################
 New Updated
 ###################
-load powerview into memory and do get-netcomputer,  this will list all computers within that domain.
-To correlate IP to hostnames you can either, nmap scan from the attacking machine or on the comprised machine use powerview command Resolve-IPAddress to resolve the IP to a hostname.
+#Pivoting
+- load powerview into memory and do get-netcomputer,  this will list all computers within that domain.
+- To correlate IP to hostnames you can either, nmap scan from the attacking machine or on the comprised machine use powerview command Resolve-IPAddress to resolve the IP to a hostname.
+- SMB? psexec. WinRM? evil-winrm. RDP? rdesktop or xfree-rdp, etc.
 ##################
 https://wadcoms.github.io/
 https://github.com/swisskyrepo/PayloadsAllTheThings
