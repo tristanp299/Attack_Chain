@@ -1,0 +1,4 @@
+- *unix-privesc-check*
+	- **/usr/bin/unix-privesc-check**
+	- example:
+		- ./unix-privesc-check standard > output.txt

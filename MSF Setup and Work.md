@@ -1,0 +1,36 @@
+ Uses PostgreSQL
+- Initialize the MSF database
+	- `sudo msfdb init`
+	- To enable at boot time:
+		- `sudo systemctl enable postresql`
+- Connect to DB
+		- init db before launching MSFconsole to autoconnect
+	- `db_connect`
+- Launch **msfconsole**
+	- `sudo msfconsole`
+	- -q = quiet
+- verify database connection
+	- `db_status`
+- `help`
+- **workspaces**
+	- `workspace`
+	- `workspace -a pen200`
+		- creating a new workspace
+- Now, let's populate the database and get familiar with some of the _Database Backend Commands_.
+- **db_namp**
+	- wrapper to execute Nmap inside Metasploit and save the findings in the database
+	- `db_nmap -A 192.168.50.202```
+- **hosts**
+	- list of all discovered hosts up to this point
+	- `hosts`
+- **services**
+	- sisplay the discovered services from our port scan
+	- `services`
+	- filter for a specific port number
+		- `services -p 8000`
+- display the categories
+	- `show -h`
+- activate module
+	- `use`
+- - List all payloads
+	- `show payloads`

