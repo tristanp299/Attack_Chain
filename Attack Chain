@@ -1,6 +1,8 @@
 ##################
 New Updated
 ###################
+#alias
+alias example='(){ echo Your arg was $1. ;}
 #Pivoting
 - load powerview into memory and do get-netcomputer,  this will list all computers within that domain.
 - To correlate IP to hostnames you can either, nmap scan from the attacking machine or on the comprised machine use powerview command Resolve-IPAddress to resolve the IP to a hostname.
