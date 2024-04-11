@@ -1,0 +1,1 @@
+enable mouse mode = "set -g mouse on" in your ~/.tmux.config file
