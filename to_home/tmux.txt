@@ -1,1 +1,2 @@
-enable mouse mode = "set -g mouse on" in your ~/.tmux.config file
+enable mouse mode = "set -g mouse on" in your ~/.tmux.config file]
+check out -> https://github.com/alexrf45/archdot
